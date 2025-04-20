@@ -1,6 +1,5 @@
 
 import Sidebar from './Sidebar';
-import SignIn from '@/components/Auth/SignIn';
 import { Toaster } from '@/components/ui/toaster';
 
 interface MainLayoutProps {

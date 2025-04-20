@@ -1,10 +1,10 @@
 
 import { useState } from 'react';
-import { useAuth } from './AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/components/ui/toast';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +12,7 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { signUp, signInWithGoogle } = useAuth();
+  const { toast } = useToast();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +26,12 @@ const SignUp = () => {
     setIsLoading(true);
 
     try {
-      await signUp(email, password);
+      // Authentication functionality removed
+      console.log('Sign up with:', email, password);
+      toast({
+        title: "Authentication disabled",
+        description: "User registration functionality has been removed",
+      });
     } catch (err) {
       setError('Failed to create an account');
       console.error(err);
@@ -40,7 +45,12 @@ const SignUp = () => {
     setIsLoading(true);
 
     try {
-      await signInWithGoogle();
+      // Authentication functionality removed
+      console.log('Sign up with Google');
+      toast({
+        title: "Authentication disabled",
+        description: "Google authentication functionality has been removed",
+      });
     } catch (err) {
       setError('Failed to sign in with Google');
       console.error(err);
