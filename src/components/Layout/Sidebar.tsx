@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/components/Auth/AuthContext';
 import { 
   Home, 
   Users, 
@@ -14,8 +13,7 @@ import {
   BarChart2, 
   Settings, 
   Menu, 
-  X, 
-  LogOut 
+  X
 } from 'lucide-react';
 
 interface NavItemProps {
@@ -45,19 +43,10 @@ const NavItem = ({ icon, label, href, isActive, isCollapsed }: NavItemProps) => 
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { logOut, currentUser } = useAuth();
   const location = useLocation();
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logOut();
-    } catch (error) {
-      console.error('Failed to log out', error);
-    }
   };
 
   const navItems = [
@@ -70,10 +59,6 @@ const Sidebar = () => {
     { icon: <BarChart2 size={20} />, label: 'Analytics', href: '/analytics' },
     { icon: <Settings size={20} />, label: 'Settings', href: '/settings' },
   ];
-
-  if (!currentUser) {
-    return null;
-  }
 
   return (
     <div
@@ -102,17 +87,6 @@ const Sidebar = () => {
             />
           ))}
         </nav>
-      </div>
-
-      <div className="p-4 border-t border-gray-200">
-        <Button
-          variant="ghost"
-          className="w-full justify-start gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-          onClick={handleLogout}
-        >
-          <LogOut size={20} />
-          {!isCollapsed && <span>Log Out</span>}
-        </Button>
       </div>
     </div>
   );
