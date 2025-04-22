@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Phone, Building2, Briefcase } from "lucide-react";
 import { useState } from "react";
 import { ProjectCard } from "@/components/Project/ProjectCard";
+import { ProjectDetailsDialog } from "@/components/Project/ProjectDetailsDialog";
 
 interface ClientDetailsProps {
   client: {
