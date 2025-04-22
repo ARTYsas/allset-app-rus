@@ -1,6 +1,6 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { InvoiceForm } from "@/components/Invoice/InvoiceForm";
+import InvoiceForm from "@/components/Invoice/InvoiceForm";
 import { Invoice } from "@/types";
 
 interface CreateInvoiceDialogProps {

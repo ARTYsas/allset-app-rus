@@ -1,12 +1,15 @@
+
 export interface Task {
   id: string;
   projectId: string;
   title: string;
   description: string;
-  status: 'todo' | 'in-progress' | 'done';
+  status: 'backlog' | 'todo' | 'in-progress' | 'review' | 'done';
   priority: 'high' | 'medium' | 'low';
   createdAt: Date;
   updatedAt: Date;
+  dueDate?: Date;
+  assignedTo?: string;
 }
 
 export interface Invoice {
