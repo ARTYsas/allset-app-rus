@@ -1,21 +1,19 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
   Calendar, 
   CreditCard, 
-  FileText, 
-  TrendingUp,
+  FileText,
   ArrowRight 
 } from 'lucide-react';
 import { Task } from '@/types';
 import KanbanBoard from '@/components/Kanban/KanbanBoard';
 import TaskDialog from '@/components/Kanban/TaskDialog';
 
-// Mock data for demo
 const mockTasks: Task[] = [
   {
     id: 'task-1',
@@ -50,6 +48,7 @@ const mockTasks: Task[] = [
 ];
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState<Task[]>(mockTasks);
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);
@@ -66,10 +65,8 @@ const Dashboard = () => {
 
   const handleTaskSave = (task: Task) => {
     if (selectedTask) {
-      // Update existing task
       setTasks(tasks.map(t => t.id === task.id ? task : t));
     } else {
-      // Add new task
       setTasks([...tasks, task]);
     }
   };
@@ -82,6 +79,10 @@ const Dashboard = () => {
     setTasks(tasks.filter(task => task.id !== taskId));
   };
 
+  const navigateToSection = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
@@ -92,52 +93,71 @@ const Dashboard = () => {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card 
+          className="cursor-pointer transition-transform hover:scale-105"
+          onClick={() => navigateToSection('/clients')}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">
-              +2 this month
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">+2 this month</p>
+              <ArrowRight className="h-4 w-4" />
+            </div>
           </CardContent>
         </Card>
-        <Card>
+
+        <Card 
+          className="cursor-pointer transition-transform hover:scale-105"
+          onClick={() => navigateToSection('/projects')}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">
-              3 due this week
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">3 due this week</p>
+              <ArrowRight className="h-4 w-4" />
+            </div>
           </CardContent>
         </Card>
-        <Card>
+
+        <Card 
+          className="cursor-pointer transition-transform hover:scale-105"
+          onClick={() => navigateToSection('/finances')}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Monthly Revenue</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">$12,450</div>
-            <p className="text-xs text-muted-foreground">
-              +18% from last month
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">+18% from last month</p>
+              <ArrowRight className="h-4 w-4" />
+            </div>
           </CardContent>
         </Card>
-        <Card>
+
+        <Card 
+          className="cursor-pointer transition-transform hover:scale-105"
+          onClick={() => navigateToSection('/documents')}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pending Invoices</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-muted-foreground">
-              $4,350 outstanding
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">$4,350 outstanding</p>
+              <ArrowRight className="h-4 w-4" />
+            </div>
           </CardContent>
         </Card>
       </div>

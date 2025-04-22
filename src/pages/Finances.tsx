@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,9 +19,9 @@ import {
 } from '@/components/ui/select';
 import { Filter, Download, PlusCircle, FileText, Check, CreditCard } from 'lucide-react';
 import { InvoiceSelectDialog } from '@/components/Finance/InvoiceSelectDialog';
+import { CreateInvoiceDialog } from '@/components/Finance/CreateInvoiceDialog';
 import { useToast } from '@/hooks/use-toast';
 
-// Mock invoices
 const mockInvoices = [
   {
     id: 1,
@@ -66,7 +65,6 @@ const mockInvoices = [
   }
 ];
 
-// Mock receipts
 const mockReceipts = [
   {
     id: 1,
@@ -94,8 +92,8 @@ const Finances = () => {
   const [receipts, setReceipts] = useState(mockReceipts);
   const [statusFilter, setStatusFilter] = useState("All");
   const [showInvoiceSelect, setShowInvoiceSelect] = useState(false);
+  const [showCreateInvoice, setShowCreateInvoice] = useState(false);
   
-  // Filter invoices by status
   const filteredInvoices = statusFilter === "All" 
     ? invoices 
     : invoices.filter(invoice => invoice.status === statusFilter);
@@ -113,7 +111,6 @@ const Finances = () => {
     
     setReceipts([...receipts, ...newReceipts]);
     
-    // Update invoice statuses to Paid
     const updatedInvoices = invoices.map(invoice => {
       if (selectedInvoices.some(selected => selected.id === invoice.id)) {
         return { ...invoice, status: "Paid" };
@@ -126,6 +123,19 @@ const Finances = () => {
     toast({
       title: "Success",
       description: `${newReceipts.length} receipt(s) have been created successfully`,
+    });
+  };
+
+  const handleCreateInvoice = (invoiceData: any) => {
+    const newInvoice = {
+      id: invoices.length + 1,
+      ...invoiceData,
+      status: "draft",
+    };
+    setInvoices([...invoices, newInvoice]);
+    toast({
+      title: "Success",
+      description: "Invoice created successfully",
     });
   };
 
@@ -163,7 +173,7 @@ const Finances = () => {
                 </SelectContent>
               </Select>
             </div>
-            <Button>
+            <Button onClick={() => setShowCreateInvoice(true)}>
               <PlusCircle className="mr-2 h-4 w-4" />
               New Invoice
             </Button>
@@ -289,6 +299,12 @@ const Finances = () => {
         onOpenChange={setShowInvoiceSelect}
         invoices={invoices.filter(inv => inv.status !== "Paid")}
         onSubmit={handleCreateReceipt}
+      />
+      
+      <CreateInvoiceDialog
+        open={showCreateInvoice}
+        onOpenChange={setShowCreateInvoice}
+        onSubmit={handleCreateInvoice}
       />
     </div>
   );

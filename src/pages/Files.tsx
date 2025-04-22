@@ -1,7 +1,9 @@
-
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Upload, FolderOpen, File, Image, FileText } from 'lucide-react';
+import { FileUploadDialog } from '@/components/FileUpload/FileUploadDialog';
+import { useToast } from '@/hooks/use-toast';
 
 const mockFiles = [
   {
@@ -48,6 +50,16 @@ const FileIcon = ({ type }: { type: string }) => {
 };
 
 const Files = () => {
+  const [showUploadDialog, setShowUploadDialog] = useState(false);
+  const { toast } = useToast();
+
+  const handleFileUpload = (files: File[]) => {
+    toast({
+      title: "Files uploaded",
+      description: `${files.length} files have been uploaded successfully.`,
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -55,7 +67,7 @@ const Files = () => {
           <h1 className="text-3xl font-bold tracking-tight">Files</h1>
           <p className="text-muted-foreground">Manage your files and folders</p>
         </div>
-        <Button>
+        <Button onClick={() => setShowUploadDialog(true)}>
           <Upload className="mr-2 h-4 w-4" />
           Upload Files
         </Button>
@@ -81,6 +93,12 @@ const Files = () => {
           </Card>
         ))}
       </div>
+
+      <FileUploadDialog
+        open={showUploadDialog}
+        onOpenChange={setShowUploadDialog}
+        onUpload={handleFileUpload}
+      />
     </div>
   );
 };
