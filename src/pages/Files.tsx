@@ -8,30 +8,30 @@ import { useToast } from '@/hooks/use-toast';
 const mockFiles = [
   {
     id: 1,
-    name: "Project Assets",
+    name: "Активы проекта",
     type: "folder",
     items: 15,
-    size: "250 MB"
+    size: "250 МБ"
   },
   {
     id: 2,
-    name: "Client Presentations",
+    name: "Презентации для клиентов",
     type: "folder",
     items: 8,
-    size: "180 MB"
+    size: "180 МБ"
   },
   {
     id: 3,
-    name: "logo-design-final.png",
+    name: "логотип-финальный.png",
     type: "image",
-    size: "2.5 MB",
+    size: "2.5 МБ",
     modified: "2024-03-15"
   },
   {
     id: 4,
-    name: "project-brief.pdf",
+    name: "описание-проекта.pdf",
     type: "document",
-    size: "1.2 MB",
+    size: "1.2 МБ",
     modified: "2024-03-14"
   }
 ];
@@ -55,8 +55,8 @@ const Files = () => {
 
   const handleFileUpload = (files: File[]) => {
     toast({
-      title: "Files uploaded",
-      description: `${files.length} files have been uploaded successfully.`,
+      title: "Файлы загружены",
+      description: `${files.length} файлы загружены успешно.`,
     });
   };
 
@@ -64,12 +64,12 @@ const Files = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Files</h1>
-          <p className="text-muted-foreground">Manage your files and folders</p>
+          <h1 className="text-3xl font-bold tracking-tight">Файлы</h1>
+          <p className="text-muted-foreground">Управление файлами и папками</p>
         </div>
         <Button onClick={() => setShowUploadDialog(true)}>
           <Upload className="mr-2 h-4 w-4" />
-          Upload Files
+          Загрузить файлы
         </Button>
       </div>
 
@@ -83,8 +83,8 @@ const Files = () => {
                   <h3 className="font-medium">{file.name}</h3>
                   <p className="text-sm text-muted-foreground">
                     {file.type === "folder" 
-                      ? `${file.items} items • ${file.size}`
-                      : `${file.size} • Modified ${file.modified}`
+                      ? `${file.items} элементов • ${file.size}`
+                      : `${file.size} • Изменено ${file.modified}`
                     }
                   </p>
                 </div>

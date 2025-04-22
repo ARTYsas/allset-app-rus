@@ -26,7 +26,7 @@ export function Sidebar({ className }: SidebarProps) {
           </h2>
           <div className="space-y-1">
             <SidebarItem Icon={LayoutDashboard} to="/">
-              Панель управления
+              Главная
             </SidebarItem>
             <SidebarItem Icon={Users} to="/clients">
               Клиенты

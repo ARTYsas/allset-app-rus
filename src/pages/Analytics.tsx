@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -15,14 +14,14 @@ const Analytics = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-        <p className="text-muted-foreground">Your business performance overview</p>
+        <h1 className="text-3xl font-bold tracking-tight">Аналитика</h1>
+        <p className="text-muted-foreground">Анализ эффективности бизнеса</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Revenue Overview</CardTitle>
+            <CardTitle>Обзор доходов</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
@@ -46,7 +45,7 @@ const Analytics = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Projects Completed</CardTitle>
+            <CardTitle>Завершенные проекты</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
@@ -71,39 +70,39 @@ const Analytics = () => {
         <Card>
           <CardHeader>
             <CardTitle className="text-sm font-medium">
-              Total Revenue
+              Общий доход
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$16,060</div>
+            <div className="text-2xl font-bold">₽1 160 000</div>
             <p className="text-xs text-muted-foreground">
-              +20.1% from last month
+              +20.1% к прошлому месяцу
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
             <CardTitle className="text-sm font-medium">
-              Projects Completed
+              Завершено проектов
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">120</div>
             <p className="text-xs text-muted-foreground">
-              +12 from last month
+              +12 к прошлому месяцу
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
             <CardTitle className="text-sm font-medium">
-              Client Satisfaction
+              Удовлетворенность клиентов
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">98%</div>
             <p className="text-xs text-muted-foreground">
-              +2% from last month
+              +2% к прошлому месяцу
             </p>
           </CardContent>
         </Card>

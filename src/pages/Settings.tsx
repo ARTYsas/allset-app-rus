@@ -9,66 +9,66 @@ const Settings = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">Manage your account settings</p>
+        <h1 className="text-3xl font-bold tracking-tight">Настройки</h1>
+        <p className="text-muted-foreground">Управление настройками аккаунта</p>
       </div>
 
       <div className="grid gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Profile Settings</CardTitle>
+            <CardTitle>Профиль</CardTitle>
             <CardDescription>
-              Update your personal information
+              Обновите ваши персональные данные
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" defaultValue="John Doe" />
+              <Label htmlFor="name">Имя</Label>
+              <Input id="name" defaultValue="Иван Иванов" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" defaultValue="john@example.com" />
+              <Label htmlFor="email">Эл. почта</Label>
+              <Input id="email" type="email" defaultValue="ivan@example.com" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="company">Company</Label>
-              <Input id="company" defaultValue="Tech Solutions Inc." />
+              <Label htmlFor="company">Компания</Label>
+              <Input id="company" defaultValue="ООО Тех Решения" />
             </div>
-            <Button>Save Changes</Button>
+            <Button>Сохранить изменения</Button>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Notifications</CardTitle>
+            <CardTitle>Уведомления</CardTitle>
             <CardDescription>
-              Configure your notification preferences
+              Настройте ваши уведомления
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Email Notifications</Label>
+                <Label>Уведомления по эл. почте</Label>
                 <p className="text-sm text-muted-foreground">
-                  Receive email updates about your account
+                  Получать обновления о состоянии аккаунта
                 </p>
               </div>
               <Switch defaultChecked />
             </div>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Project Updates</Label>
+                <Label>Обновления проектов</Label>
                 <p className="text-sm text-muted-foreground">
-                  Get notified about project status changes
+                  Получать уведомления об изменениях в проектах
                 </p>
               </div>
               <Switch defaultChecked />
             </div>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Marketing Communications</Label>
+                <Label>Маркетинговые рассылки</Label>
                 <p className="text-sm text-muted-foreground">
-                  Receive updates about new features and promotions
+                  Получать информацию о новых функциях и акциях
                 </p>
               </div>
               <Switch />
@@ -78,25 +78,25 @@ const Settings = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Security</CardTitle>
+            <CardTitle>Безопасность</CardTitle>
             <CardDescription>
-              Manage your security preferences
+              Управление настройками безопасности
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="current-password">Current Password</Label>
+              <Label htmlFor="current-password">Текущий пароль</Label>
               <Input id="current-password" type="password" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="new-password">New Password</Label>
+              <Label htmlFor="new-password">Новый пароль</Label>
               <Input id="new-password" type="password" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirm New Password</Label>
+              <Label htmlFor="confirm-password">Подтвердите новый пароль</Label>
               <Input id="confirm-password" type="password" />
             </div>
-            <Button>Update Password</Button>
+            <Button>Обновить пароль</Button>
           </CardContent>
         </Card>
       </div>

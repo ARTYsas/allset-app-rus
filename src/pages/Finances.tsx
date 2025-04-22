@@ -25,64 +25,64 @@ import { useToast } from '@/hooks/use-toast';
 const mockInvoices = [
   {
     id: 1,
-    number: "INV-2024-001",
-    client: "Tech Solutions Inc.",
-    project: "E-commerce Platform Redesign",
-    amount: 5000,
+    number: "ИНВ-2024-001",
+    client: "ООО Тех Решения",
+    project: "Редизайн интернет-магазина",
+    amount: 350000,
     date: "2024-03-10",
     dueDate: "2024-04-10",
-    status: "Paid"
+    status: "Оплачен"
   },
   {
     id: 2,
-    number: "INV-2024-002",
-    client: "Digital Marketing Pro",
-    project: "SEO Optimization Campaign",
-    amount: 2500,
+    number: "ИНВ-2024-002",
+    client: "ООО Диджитал Маркетинг",
+    project: "SEO Оптимизация",
+    amount: 175000,
     date: "2024-03-15",
     dueDate: "2024-04-15",
-    status: "Pending"
+    status: "Ожидает оплаты"
   },
   {
     id: 3,
-    number: "INV-2024-003",
-    client: "Web Design Studio",
-    project: "Mobile App Development",
-    amount: 7500,
+    number: "ИНВ-2024-003",
+    client: "Веб-Студия",
+    project: "Разработка мобильного приложения",
+    amount: 525000,
     date: "2024-03-20",
     dueDate: "2024-04-20",
-    status: "Overdue"
+    status: "Просрочен"
   },
   {
     id: 4,
-    number: "INV-2024-004",
-    client: "Tech Solutions Inc.",
-    project: "Brand Identity Refresh",
-    amount: 3000,
+    number: "ИНВ-2024-004",
+    client: "ООО Тех Решения",
+    project: "Обновление брендинга",
+    amount: 210000,
     date: "2024-03-25",
     dueDate: "2024-04-25",
-    status: "Draft"
+    status: "Черновик"
   }
 ];
 
 const mockReceipts = [
   {
     id: 1,
-    number: "REC-2024-001",
-    invoiceNumber: "INV-2024-001",
-    client: "Tech Solutions Inc.",
-    amount: 5000,
+    number: "ПЛТ-2024-001",
+    invoiceNumber: "ИНВ-2024-001",
+    client: "ООО Тех Решения",
+    amount: 350000,
     date: "2024-04-05",
-    paymentMethod: "Bank Transfer"
+    paymentMethod: "Банковский перевод"
   },
   {
     id: 2,
-    number: "REC-2024-002",
-    invoiceNumber: "INV-2024-002",
-    client: "Digital Marketing Pro",
-    amount: 2500,
+    number: "ПЛТ-2024-002",
+    invoiceNumber: "ИНВ-2024-002",
+    client: "ООО Диджитал Маркетинг",
+    amount: 175000,
     date: "2024-04-12",
-    paymentMethod: "Credit Card"
+    paymentMethod: "Кредитная карта"
   }
 ];
 
@@ -101,19 +101,19 @@ const Finances = () => {
   const handleCreateReceipt = (selectedInvoices: typeof mockInvoices) => {
     const newReceipts = selectedInvoices.map((invoice, index) => ({
       id: receipts.length + index + 1,
-      number: `REC-2024-${String(receipts.length + index + 1).padStart(3, '0')}`,
+      number: `ПЛТ-2024-${String(receipts.length + index + 1).padStart(3, '0')}`,
       invoiceNumber: invoice.number,
       client: invoice.client,
       amount: invoice.amount,
       date: new Date().toISOString().split('T')[0],
-      paymentMethod: "Bank Transfer"
+      paymentMethod: "Банковский перевод"
     }));
     
     setReceipts([...receipts, ...newReceipts]);
     
     const updatedInvoices = invoices.map(invoice => {
       if (selectedInvoices.some(selected => selected.id === invoice.id)) {
-        return { ...invoice, status: "Paid" };
+        return { ...invoice, status: "Оплачен" };
       }
       return invoice;
     });
@@ -121,8 +121,8 @@ const Finances = () => {
     setInvoices(updatedInvoices);
     
     toast({
-      title: "Success",
-      description: `${newReceipts.length} receipt(s) have been created successfully`,
+      title: "Успех",
+      description: `${newReceipts.length} платеж(а/и) создан(ы) успешно`,
     });
   };
 
@@ -134,67 +134,67 @@ const Finances = () => {
     };
     setInvoices([...invoices, newInvoice]);
     toast({
-      title: "Success",
-      description: "Invoice created successfully",
+      title: "Успех",
+      description: "Счет создан успешно",
     });
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Finances</h1>
-        <p className="text-muted-foreground">Manage your invoices and receipts</p>
+        <h1 className="text-3xl font-bold tracking-tight">Финансы</h1>
+        <p className="text-muted-foreground">Управление счетами и платежами</p>
       </div>
 
       <Tabs defaultValue="invoices">
         <TabsList>
-          <TabsTrigger value="invoices">Invoices</TabsTrigger>
-          <TabsTrigger value="receipts">Receipts</TabsTrigger>
+          <TabsTrigger value="invoices">Счета</TabsTrigger>
+          <TabsTrigger value="receipts">Платежи</TabsTrigger>
         </TabsList>
         
         <TabsContent value="invoices" className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Filter className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm">Filter by status:</span>
+              <span className="text-sm">Фильтр по статусу:</span>
               <Select 
                 value={statusFilter} 
                 onValueChange={setStatusFilter}
               >
                 <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue placeholder="Выберите статус" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="All">All</SelectItem>
-                  <SelectItem value="Draft">Draft</SelectItem>
-                  <SelectItem value="Pending">Pending</SelectItem>
-                  <SelectItem value="Paid">Paid</SelectItem>
-                  <SelectItem value="Overdue">Overdue</SelectItem>
+                  <SelectItem value="All">Все</SelectItem>
+                  <SelectItem value="Черновик">Черновик</SelectItem>
+                  <SelectItem value="Ожидает оплаты">Ожидает оплаты</SelectItem>
+                  <SelectItem value="Оплачен">Оплачен</SelectItem>
+                  <SelectItem value="Просрочен">Просрочен</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <Button onClick={() => setShowCreateInvoice(true)}>
               <PlusCircle className="mr-2 h-4 w-4" />
-              New Invoice
+              Новый счет
             </Button>
           </div>
           
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle>Invoice List</CardTitle>
+              <CardTitle>Список счетов</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Invoice #</TableHead>
-                    <TableHead>Client</TableHead>
-                    <TableHead>Project</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Due Date</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>Номер счета</TableHead>
+                    <TableHead>Клиент</TableHead>
+                    <TableHead>Проект</TableHead>
+                    <TableHead>Дата</TableHead>
+                    <TableHead>Дата погашения</TableHead>
+                    <TableHead>Сумма</TableHead>
+                    <TableHead>Статус</TableHead>
+                    <TableHead className="text-right">Действия</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -205,12 +205,12 @@ const Finances = () => {
                       <TableCell>{invoice.project}</TableCell>
                       <TableCell>{invoice.date}</TableCell>
                       <TableCell>{invoice.dueDate}</TableCell>
-                      <TableCell>${invoice.amount.toLocaleString()}</TableCell>
+                      <TableCell>{invoice.amount.toLocaleString()}</TableCell>
                       <TableCell>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          invoice.status === "Paid" ? "bg-green-100 text-green-800" :
-                          invoice.status === "Pending" ? "bg-blue-100 text-blue-800" :
-                          invoice.status === "Overdue" ? "bg-red-100 text-red-800" :
+                          invoice.status === "Оплачен" ? "bg-green-100 text-green-800" :
+                          invoice.status === "Ожидает оплаты" ? "bg-blue-100 text-blue-800" :
+                          invoice.status === "Просрочен" ? "bg-red-100 text-red-800" :
                           "bg-gray-100 text-gray-800"
                         }`}>
                           {invoice.status}
@@ -227,7 +227,7 @@ const Finances = () => {
                   {filteredInvoices.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={8} className="text-center py-4 text-muted-foreground">
-                        No invoices found with the selected filter.
+                        Нет счетов с выбранным фильтром.
                       </TableCell>
                     </TableRow>
                   )}
@@ -242,25 +242,25 @@ const Finances = () => {
             <div></div>
             <Button onClick={() => setShowInvoiceSelect(true)}>
               <CreditCard className="mr-2 h-4 w-4" />
-              Create Receipt
+              Создать платеж
             </Button>
           </div>
           
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle>Receipt List</CardTitle>
+              <CardTitle>Список платежей</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Receipt #</TableHead>
-                    <TableHead>Invoice #</TableHead>
-                    <TableHead>Client</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Payment Method</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>Номер платежа</TableHead>
+                    <TableHead>Номер счета</TableHead>
+                    <TableHead>Клиент</TableHead>
+                    <TableHead>Дата</TableHead>
+                    <TableHead>Сумма</TableHead>
+                    <TableHead>Метод оплаты</TableHead>
+                    <TableHead className="text-right">Действия</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -270,7 +270,7 @@ const Finances = () => {
                       <TableCell>{receipt.invoiceNumber}</TableCell>
                       <TableCell>{receipt.client}</TableCell>
                       <TableCell>{receipt.date}</TableCell>
-                      <TableCell>${receipt.amount.toLocaleString()}</TableCell>
+                      <TableCell>{receipt.amount.toLocaleString()}</TableCell>
                       <TableCell>{receipt.paymentMethod}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="icon">
@@ -283,7 +283,7 @@ const Finances = () => {
                   {receipts.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center py-4 text-muted-foreground">
-                        No receipts found.
+                        Нет платежей.
                       </TableCell>
                     </TableRow>
                   )}
@@ -297,7 +297,7 @@ const Finances = () => {
       <InvoiceSelectDialog
         open={showInvoiceSelect}
         onOpenChange={setShowInvoiceSelect}
-        invoices={invoices.filter(inv => inv.status !== "Paid")}
+        invoices={invoices.filter(inv => inv.status !== "Оплачен")}
         onSubmit={handleCreateReceipt}
       />
       

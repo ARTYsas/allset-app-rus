@@ -88,7 +88,7 @@ const Dashboard = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Панель управления</h1>
-          <p className="text-muted-foreground">Обзор вашего ИТ-бизнеса</p>
+          <p className="text-muted-foreground">Обзор вашего бизнеса</p>
         </div>
       </div>
 
@@ -104,7 +104,7 @@ const Dashboard = () => {
           <CardContent>
             <div className="text-2xl font-bold">12</div>
             <div className="flex items-center justify-between">
-              <p className="text-xs text-muted-foreground">+2 в этом месяце</p>
+              <p className="text-xs text-muted-foreground">+2 за месяц</p>
               <ArrowRight className="h-4 w-4" />
             </div>
           </CardContent>
@@ -132,13 +132,13 @@ const Dashboard = () => {
           onClick={() => navigateToSection('/finances')}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ежемесячный доход</CardTitle>
+            <CardTitle className="text-sm font-medium">Доход за месяц</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₽895,000</div>
+            <div className="text-2xl font-bold">₽895 000</div>
             <div className="flex items-center justify-between">
-              <p className="text-xs text-muted-foreground">+18% по сравнению с прошлым месяцем</p>
+              <p className="text-xs text-muted-foreground">+18% к прошлому месяцу</p>
               <ArrowRight className="h-4 w-4" />
             </div>
           </CardContent>
@@ -149,13 +149,13 @@ const Dashboard = () => {
           onClick={() => navigateToSection('/documents')}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ожидающие счета</CardTitle>
+            <CardTitle className="text-sm font-medium">Ожидают оплаты</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3</div>
             <div className="flex items-center justify-between">
-              <p className="text-xs text-muted-foreground">₽314,000 к оплате</p>
+              <p className="text-xs text-muted-foreground">₽314 000 к оплате</p>
               <ArrowRight className="h-4 w-4" />
             </div>
           </CardContent>
@@ -165,7 +165,7 @@ const Dashboard = () => {
       <Tabs defaultValue="tasks" className="space-y-4">
         <TabsList>
           <TabsTrigger value="tasks">Текущие задачи</TabsTrigger>
-          <TabsTrigger value="recent">Последняя активность</TabsTrigger>
+          <TabsTrigger value="recent">Последние действия</TabsTrigger>
         </TabsList>
         <TabsContent value="tasks" className="space-y-4">
           <KanbanBoard 
@@ -179,14 +179,13 @@ const Dashboard = () => {
         <TabsContent value="recent">
           <Card>
             <CardHeader>
-              <CardTitle>Последняя активность</CardTitle>
+              <CardTitle>Последние действия</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-8">
-                {/* Activity items */}
                 <div className="flex items-center">
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Счет #ИНВ-001 оплачен</p>
+                    <p className="text-sm font-medium">Счет №ИНВ-001 оплачен</p>
                     <p className="text-sm text-muted-foreground">Клиент: ООО "Тех Решения"</p>
                   </div>
                   <div className="ml-auto text-sm text-muted-foreground">2 часа назад</div>
@@ -194,14 +193,14 @@ const Dashboard = () => {
                 <div className="flex items-center">
                   <div className="space-y-1">
                     <p className="text-sm font-medium">Начат новый проект</p>
-                    <p className="text-sm text-muted-foreground">Проект: Редизайн интернет-магазина</p>
+                    <p className="text-sm text-muted-foreground">Проект: Редизайн сайта</p>
                   </div>
                   <div className="ml-auto text-sm text-muted-foreground">Вчера</div>
                 </div>
                 <div className="flex items-center">
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Контракт подписан</p>
-                    <p className="text-sm text-muted-foreground">Клиент: Диджитал Маркетинг Агентство</p>
+                    <p className="text-sm font-medium">Подписан контракт</p>
+                    <p className="text-sm text-muted-foreground">Клиент: ООО "Диджитал Маркетинг"</p>
                   </div>
                   <div className="ml-auto text-sm text-muted-foreground">3 дня назад</div>
                 </div>
@@ -216,7 +215,7 @@ const Dashboard = () => {
         onClose={() => setIsTaskDialogOpen(false)}
         onSave={handleTaskSave}
         task={selectedTask}
-        projectId="project-1" // In a real app, this would be dynamic
+        projectId="project-1"
       />
     </div>
   );
