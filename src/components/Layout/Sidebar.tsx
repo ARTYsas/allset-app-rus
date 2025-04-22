@@ -68,7 +68,7 @@ const Sidebar = () => {
       )}
     >
       <div className="flex items-center p-4 border-b border-gray-200">
-        {!isCollapsed && <h1 className="text-xl font-bold text-gray-800 flex-1">IT Workbench</h1>}
+        {!isCollapsed && <h1 className="text-xl font-bold text-gray-800 flex-1">Allset</h1>}
         <Button variant="ghost" size="icon" onClick={toggleSidebar} className="ml-auto">
           {isCollapsed ? <Menu size={20} /> : <X size={20} />}
         </Button>

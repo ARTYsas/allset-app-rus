@@ -1,9 +1,12 @@
 
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { UserPlus, Mail, Phone } from 'lucide-react';
+import { ClientFormDialog, ClientFormData } from '@/components/Client/ClientFormDialog';
+import { ClientDetailsDialog } from '@/components/Client/ClientDetailsDialog';
 
-const mockClients = [
+const initialClients = [
   {
     id: 1,
     name: "Tech Solutions Inc.",
@@ -28,6 +31,17 @@ const mockClients = [
 ];
 
 const Clients = () => {
+  const [clients, setClients] = useState(initialClients);
+  const [selectedClient, setSelectedClient] = useState<null | typeof clients[0]>(null);
+
+  const handleCreateClient = (data: ClientFormData) => {
+    const newClient = {
+      id: clients.length + 1,
+      ...data
+    };
+    setClients([...clients, newClient]);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -35,15 +49,24 @@ const Clients = () => {
           <h1 className="text-3xl font-bold tracking-tight">Clients</h1>
           <p className="text-muted-foreground">Manage your client relationships</p>
         </div>
-        <Button>
-          <UserPlus className="mr-2 h-4 w-4" />
-          Add Client
-        </Button>
+        <ClientFormDialog
+          trigger={
+            <Button>
+              <UserPlus className="mr-2 h-4 w-4" />
+              Add Client
+            </Button>
+          }
+          onSubmit={handleCreateClient}
+        />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {mockClients.map((client) => (
-          <Card key={client.id}>
+        {clients.map((client) => (
+          <Card 
+            key={client.id}
+            className="cursor-pointer hover:shadow-md transition-shadow"
+            onClick={() => setSelectedClient(client)}
+          >
             <CardHeader>
               <CardTitle className="text-xl">{client.name}</CardTitle>
             </CardHeader>
@@ -71,6 +94,14 @@ const Clients = () => {
           </Card>
         ))}
       </div>
+
+      {selectedClient && (
+        <ClientDetailsDialog
+          client={selectedClient}
+          open={!!selectedClient}
+          onOpenChange={(open) => !open && setSelectedClient(null)}
+        />
+      )}
     </div>
   );
 };
