@@ -1,0 +1,195 @@
+
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
+import { Clock, CheckCircle, PlusCircle, Trash2, CalendarDays, ListChecks } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+interface ProjectDetailsDialogProps {
+  project: {
+    id: number;
+    name: string;
+    deadline: string;
+    progress: number;
+    status: string;
+    tasks: Array<{ id: number; title: string; completed: boolean }>;
+  };
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDetailsDialogProps) {
+  const [tasks, setTasks] = useState(project.tasks);
+  const [newTaskTitle, setNewTaskTitle] = useState("");
+  const { toast } = useToast();
+
+  const completedTasks = tasks.filter(task => task.completed).length;
+  const totalTasks = tasks.length;
+  const progressPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+  const handleToggleTask = (taskId: number) => {
+    setTasks(tasks.map(task => 
+      task.id === taskId ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
+  const handleAddTask = () => {
+    if (!newTaskTitle.trim()) {
+      toast({
+        title: "Error",
+        description: "Task title cannot be empty",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const newTask = {
+      id: Math.max(0, ...tasks.map(t => t.id)) + 1,
+      title: newTaskTitle,
+      completed: false
+    };
+
+    setTasks([...tasks, newTask]);
+    setNewTaskTitle("");
+    
+    toast({
+      title: "Success",
+      description: "Task added successfully"
+    });
+  };
+
+  const handleRemoveTask = (taskId: number) => {
+    setTasks(tasks.filter(task => task.id !== taskId));
+    
+    toast({
+      title: "Success",
+      description: "Task removed successfully"
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[700px]">
+        <DialogHeader>
+          <DialogTitle>{project.name}</DialogTitle>
+        </DialogHeader>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base flex items-center">
+                <CalendarDays className="mr-2 h-4 w-4" />
+                Project Details
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Deadline:</span>
+                <span>{project.deadline}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Status:</span>
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  project.status === "Completed" ? "bg-green-100 text-green-800" :
+                  project.status === "In Progress" ? "bg-blue-100 text-blue-800" :
+                  project.status === "Frozen" ? "bg-purple-100 text-purple-800" :
+                  project.status === "Canceled" ? "bg-red-100 text-red-800" :
+                  "bg-gray-100 text-gray-800"
+                }`}>
+                  {project.status}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Progress:</span>
+                <span>{progressPercentage}%</span>
+              </div>
+              <Progress value={progressPercentage} className="h-2 mt-2" />
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base flex items-center">
+                <ListChecks className="mr-2 h-4 w-4" />
+                Tasks Progress
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col items-center justify-center h-full">
+                <div className="text-3xl font-bold">{completedTasks}/{totalTasks}</div>
+                <div className="text-sm text-muted-foreground">tasks completed</div>
+                <div className="mt-2 w-full">
+                  <Progress value={progressPercentage} className="h-2" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center justify-between">
+              <div className="flex items-center">
+                <CheckCircle className="mr-2 h-4 w-4" />
+                Tasks
+              </div>
+              <div className="flex items-center space-x-2">
+                <Input 
+                  placeholder="Add new task..." 
+                  value={newTaskTitle}
+                  onChange={(e) => setNewTaskTitle(e.target.value)}
+                  className="h-8 text-sm"
+                />
+                <Button 
+                  size="sm" 
+                  onClick={handleAddTask}
+                >
+                  <PlusCircle className="h-4 w-4 mr-1" />
+                  Add
+                </Button>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {tasks.length === 0 ? (
+                <p className="text-center text-muted-foreground text-sm py-4">No tasks yet</p>
+              ) : (
+                tasks.map(task => (
+                  <div key={task.id} className="flex items-center justify-between border-b border-gray-100 py-2">
+                    <div className="flex items-center">
+                      <Checkbox 
+                        id={`task-${task.id}`}
+                        checked={task.completed}
+                        onCheckedChange={() => handleToggleTask(task.id)}
+                        className="mr-3"
+                      />
+                      <label 
+                        htmlFor={`task-${task.id}`}
+                        className={`text-sm ${task.completed ? 'line-through text-muted-foreground' : ''}`}
+                      >
+                        {task.title}
+                      </label>
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => handleRemoveTask(task.id)}
+                      className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </DialogContent>
+    </Dialog>
+  );
+}

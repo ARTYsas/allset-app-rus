@@ -1,7 +1,11 @@
 
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, Download, Eye, PlusCircle } from 'lucide-react';
+import { FileText, Download, Eye, PlusCircle, File } from 'lucide-react';
+import { DocumentTemplateDialog } from '@/components/Document/DocumentTemplateDialog';
+import { DocumentDetailsDialog } from '@/components/Document/DocumentDetailsDialog';
+import { DocumentFormDialog } from '@/components/Document/DocumentFormDialog';
 
 const mockDocuments = [
   {
@@ -10,6 +14,7 @@ const mockDocuments = [
     type: "PDF",
     size: "2.5 MB",
     lastModified: "2024-03-15",
+    content: "This is a project proposal for Tech Solutions. It includes details about the project scope, timeline, and budget.",
   },
   {
     id: 2,
@@ -17,6 +22,7 @@ const mockDocuments = [
     type: "DOCX",
     size: "1.8 MB",
     lastModified: "2024-03-10",
+    content: "This is a service agreement template. It includes terms and conditions for providing services to clients.",
   },
   {
     id: 3,
@@ -24,10 +30,27 @@ const mockDocuments = [
     type: "PDF",
     size: "3.2 MB",
     lastModified: "2024-03-05",
+    content: "This is a marketing campaign report. It includes details about the campaign performance, budget, and results.",
   }
 ];
 
 const Documents = () => {
+  const [documents, setDocuments] = useState(mockDocuments);
+  const [showTemplateDialog, setShowTemplateDialog] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<any>(null);
+  const [showDocumentForm, setShowDocumentForm] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+
+  const handleAddDocument = (documentData: any) => {
+    const newDocument = {
+      id: documents.length + 1,
+      ...documentData,
+      lastModified: new Date().toISOString().split('T')[0],
+      size: "1.0 MB", // Default size
+    };
+    setDocuments([...documents, newDocument]);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -35,14 +58,14 @@ const Documents = () => {
           <h1 className="text-3xl font-bold tracking-tight">Documents</h1>
           <p className="text-muted-foreground">Manage your business documents</p>
         </div>
-        <Button>
+        <Button onClick={() => setShowTemplateDialog(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
-          Upload Document
+          Create Document
         </Button>
       </div>
 
       <div className="grid gap-4">
-        {mockDocuments.map((doc) => (
+        {documents.map((doc) => (
           <Card key={doc.id}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-lg font-medium">
@@ -63,7 +86,11 @@ const Documents = () => {
                   </p>
                 </div>
                 <div className="flex space-x-2">
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setSelectedDocument(doc)}
+                  >
                     <Eye className="h-4 w-4" />
                   </Button>
                   <Button variant="outline" size="sm">
@@ -75,6 +102,34 @@ const Documents = () => {
           </Card>
         ))}
       </div>
+
+      {/* Template Selection Dialog */}
+      <DocumentTemplateDialog
+        open={showTemplateDialog}
+        onOpenChange={setShowTemplateDialog}
+        onSelectTemplate={(template) => {
+          setSelectedTemplate(template);
+          setShowTemplateDialog(false);
+          setShowDocumentForm(true);
+        }}
+      />
+
+      {/* Document Form Dialog */}
+      <DocumentFormDialog
+        open={showDocumentForm}
+        onOpenChange={setShowDocumentForm}
+        template={selectedTemplate}
+        onSubmit={handleAddDocument}
+      />
+
+      {/* Document Details Dialog */}
+      {selectedDocument && (
+        <DocumentDetailsDialog
+          document={selectedDocument}
+          open={!!selectedDocument}
+          onOpenChange={(open) => !open && setSelectedDocument(null)}
+        />
+      )}
     </div>
   );
 };
