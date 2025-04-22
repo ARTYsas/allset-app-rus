@@ -20,6 +20,17 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
   const totalTasks = project.tasks.length;
   const progressPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
   
+  const getStatusDisplayText = (status: string) => {
+    switch (status) {
+      case "Completed": return "Завершен";
+      case "In Progress": return "В процессе";
+      case "Frozen": return "Заморожен";
+      case "Canceled": return "Отменен";
+      case "Ready": return "Готов";
+      default: return status;
+    }
+  };
+  
   return (
     <Card 
       className="cursor-pointer hover:shadow-md transition-shadow"
@@ -32,7 +43,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
         <div className="flex justify-between items-center text-sm">
           <div className="flex items-center">
             <Clock className="mr-2 h-4 w-4 text-gray-500" />
-            <span>Due: {project.deadline}</span>
+            <span>Срок: {project.deadline}</span>
           </div>
           <div>
             <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -42,17 +53,17 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
               project.status === "Canceled" ? "bg-red-100 text-red-800" :
               "bg-gray-100 text-gray-800"
             }`}>
-              {project.status}
+              {getStatusDisplayText(project.status)}
             </span>
           </div>
         </div>
         
         <div className="space-y-2">
           <div className="flex justify-between items-center text-sm">
-            <span className="text-muted-foreground">Progress</span>
+            <span className="text-muted-foreground">Прогресс</span>
             <div className="flex items-center">
               <CheckCircle className="mr-1 h-3 w-3 text-green-500" />
-              <span>{completedTasks}/{totalTasks} tasks</span>
+              <span>{completedTasks}/{totalTasks} задач</span>
             </div>
           </div>
           <Progress value={progressPercentage} className="h-2" />

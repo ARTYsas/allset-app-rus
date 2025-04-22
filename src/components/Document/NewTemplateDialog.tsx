@@ -114,7 +114,7 @@ export function NewTemplateDialog({ open, onOpenChange, onSubmit }: NewTemplateD
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Create New Template</DialogTitle>
+          <DialogTitle>Создать новый шаблон</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">

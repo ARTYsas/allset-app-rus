@@ -26,28 +26,28 @@ export function Sidebar({ className }: SidebarProps) {
           </h2>
           <div className="space-y-1">
             <SidebarItem Icon={LayoutDashboard} to="/">
-              Dashboard
+              Панель управления
             </SidebarItem>
             <SidebarItem Icon={Users} to="/clients">
-              Clients
+              Клиенты
             </SidebarItem>
             <SidebarItem Icon={FolderClosed} to="/projects">
-              Projects
+              Проекты
             </SidebarItem>
             <SidebarItem Icon={FileText} to="/documents">
-              Documents
+              Документы
             </SidebarItem>
             <SidebarItem Icon={Wallet} to="/finances">
-              Finances
+              Финансы
             </SidebarItem>
             <SidebarItem Icon={Home} to="/files">
-              Files
+              Файлы
             </SidebarItem>
             <SidebarItem Icon={BarChart} to="/analytics">
-              Analytics
+              Аналитика
             </SidebarItem>
             <SidebarItem Icon={Settings} to="/settings">
-              Settings
+              Настройки
             </SidebarItem>
           </div>
         </div>

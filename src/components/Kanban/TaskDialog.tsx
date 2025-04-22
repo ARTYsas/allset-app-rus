@@ -77,63 +77,63 @@ const TaskDialog = ({ isOpen, onClose, onSave, task, projectId }: TaskDialogProp
       <DialogContent className="sm:max-w-md">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>{isEditing ? 'Edit Task' : 'New Task'}</DialogTitle>
+            <DialogTitle>{isEditing ? 'Редактировать задачу' : 'Новая задача'}</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">Название</Label>
               <Input
                 id="title"
                 name="title"
                 value={formData.title || ''}
                 onChange={handleChange}
-                placeholder="Task title"
+                placeholder="Название задачи"
                 required
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">Описание</Label>
               <Textarea
                 id="description"
                 name="description"
                 value={formData.description || ''}
                 onChange={handleChange}
-                placeholder="Task description"
+                placeholder="Описание задачи"
                 rows={3}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status">Статус</Label>
                 <Select
                   onValueChange={(value) => handleSelectChange('status', value)}
                   defaultValue={formData.status || 'todo'}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
+                    <SelectValue placeholder="Выберите статус" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="backlog">Backlog</SelectItem>
-                    <SelectItem value="todo">To Do</SelectItem>
-                    <SelectItem value="in-progress">In Progress</SelectItem>
-                    <SelectItem value="review">Review</SelectItem>
-                    <SelectItem value="done">Done</SelectItem>
+                    <SelectItem value="backlog">Бэклог</SelectItem>
+                    <SelectItem value="todo">К выполнению</SelectItem>
+                    <SelectItem value="in-progress">В работе</SelectItem>
+                    <SelectItem value="review">На проверке</SelectItem>
+                    <SelectItem value="done">Готово</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="priority">Priority</Label>
+                <Label htmlFor="priority">Приоритет</Label>
                 <Select
                   onValueChange={(value) => handleSelectChange('priority', value)}
                   defaultValue={formData.priority || 'medium'}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select priority" />
+                    <SelectValue placeholder="Выберите приоритет" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="low">Низкий</SelectItem>
+                    <SelectItem value="medium">Средний</SelectItem>
+                    <SelectItem value="high">Высокий</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -141,9 +141,9 @@ const TaskDialog = ({ isOpen, onClose, onSave, task, projectId }: TaskDialogProp
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
+              Отмена
             </Button>
-            <Button type="submit">Save</Button>
+            <Button type="submit">Сохранить</Button>
           </DialogFooter>
         </form>
       </DialogContent>

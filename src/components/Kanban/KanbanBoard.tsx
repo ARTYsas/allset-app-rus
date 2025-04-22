@@ -24,11 +24,11 @@ const KanbanBoard = ({
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
 
   const columns = [
-    { id: 'backlog', title: 'Backlog' },
-    { id: 'todo', title: 'To Do' },
-    { id: 'in-progress', title: 'In Progress' },
-    { id: 'review', title: 'Review' },
-    { id: 'done', title: 'Done' },
+    { id: 'backlog', title: 'Бэклог' },
+    { id: 'todo', title: 'К выполнению' },
+    { id: 'in-progress', title: 'В работе' },
+    { id: 'review', title: 'На проверке' },
+    { id: 'done', title: 'Готово' },
   ];
 
   const getTasksByStatus = (status: string) => {
@@ -125,7 +125,8 @@ const KanbanBoard = ({
                                     ? 'bg-yellow-100 text-yellow-800'
                                     : 'bg-green-100 text-green-800'
                                 }`}>
-                                  {task.priority}
+                                  {task.priority === 'high' ? 'Высокий' : 
+                                   task.priority === 'medium' ? 'Средний' : 'Низкий'}
                                 </div>
                                 <div className="flex space-x-1">
                                   <Button

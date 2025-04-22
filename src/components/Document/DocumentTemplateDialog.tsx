@@ -72,7 +72,7 @@ export function DocumentTemplateDialog({ open, onOpenChange, onSelectTemplate }:
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <FileText className="mr-2 h-5 w-5" />
-            Select Document Template
+            Выберите шаблон документа
           </DialogTitle>
         </DialogHeader>
         
@@ -98,8 +98,8 @@ export function DocumentTemplateDialog({ open, onOpenChange, onSelectTemplate }:
           >
             <CardContent className="p-4 flex flex-col items-center text-center">
               <FilePlus className="h-12 w-12 text-gray-400 mb-2" />
-              <h3 className="font-medium">Add Template</h3>
-              <p className="text-xs text-muted-foreground mt-1">Create a new document template</p>
+              <h3 className="font-medium">Добавить шаблон</h3>
+              <p className="text-xs text-muted-foreground mt-1">Создать новый шаблон документа</p>
             </CardContent>
           </Card>
         </div>

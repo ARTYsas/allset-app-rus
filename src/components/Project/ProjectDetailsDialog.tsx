@@ -40,8 +40,8 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
   const handleAddTask = () => {
     if (!newTaskTitle.trim()) {
       toast({
-        title: "Error",
-        description: "Task title cannot be empty",
+        title: "Ошибка",
+        description: "Название задачи не может быть пустым",
         variant: "destructive"
       });
       return;
@@ -57,8 +57,8 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
     setNewTaskTitle("");
     
     toast({
-      title: "Success",
-      description: "Task added successfully"
+      title: "Успешно",
+      description: "Задача добавлена"
     });
   };
 
@@ -66,9 +66,20 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
     setTasks(tasks.filter(task => task.id !== taskId));
     
     toast({
-      title: "Success",
-      description: "Task removed successfully"
+      title: "Успешно",
+      description: "Задача удалена"
     });
+  };
+
+  const getStatusDisplayText = (status: string) => {
+    switch (status) {
+      case "Completed": return "Завершен";
+      case "In Progress": return "В процессе";
+      case "Frozen": return "Заморожен";
+      case "Canceled": return "Отменен";
+      case "Ready": return "Готов";
+      default: return status;
+    }
   };
 
   return (
@@ -83,16 +94,16 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center">
                 <CalendarDays className="mr-2 h-4 w-4" />
-                Project Details
+                Детали проекта
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Deadline:</span>
+                <span className="text-muted-foreground">Срок:</span>
                 <span>{project.deadline}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Status:</span>
+                <span className="text-muted-foreground">Статус:</span>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                   project.status === "Completed" ? "bg-green-100 text-green-800" :
                   project.status === "In Progress" ? "bg-blue-100 text-blue-800" :
@@ -100,11 +111,11 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
                   project.status === "Canceled" ? "bg-red-100 text-red-800" :
                   "bg-gray-100 text-gray-800"
                 }`}>
-                  {project.status}
+                  {getStatusDisplayText(project.status)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Progress:</span>
+                <span className="text-muted-foreground">Прогресс:</span>
                 <span>{progressPercentage}%</span>
               </div>
               <Progress value={progressPercentage} className="h-2 mt-2" />
@@ -115,13 +126,13 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center">
                 <ListChecks className="mr-2 h-4 w-4" />
-                Tasks Progress
+                Прогресс задач
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col items-center justify-center h-full">
                 <div className="text-3xl font-bold">{completedTasks}/{totalTasks}</div>
-                <div className="text-sm text-muted-foreground">tasks completed</div>
+                <div className="text-sm text-muted-foreground">задач выполнено</div>
                 <div className="mt-2 w-full">
                   <Progress value={progressPercentage} className="h-2" />
                 </div>
@@ -135,11 +146,11 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
             <CardTitle className="text-base flex items-center justify-between">
               <div className="flex items-center">
                 <CheckCircle className="mr-2 h-4 w-4" />
-                Tasks
+                Задачи
               </div>
               <div className="flex items-center space-x-2">
                 <Input 
-                  placeholder="Add new task..." 
+                  placeholder="Добавить новую задачу..." 
                   value={newTaskTitle}
                   onChange={(e) => setNewTaskTitle(e.target.value)}
                   className="h-8 text-sm"
@@ -149,7 +160,7 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
                   onClick={handleAddTask}
                 >
                   <PlusCircle className="h-4 w-4 mr-1" />
-                  Add
+                  Добавить
                 </Button>
               </div>
             </CardTitle>
@@ -157,7 +168,7 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
           <CardContent>
             <div className="space-y-2">
               {tasks.length === 0 ? (
-                <p className="text-center text-muted-foreground text-sm py-4">No tasks yet</p>
+                <p className="text-center text-muted-foreground text-sm py-4">Пока нет задач</p>
               ) : (
                 tasks.map(task => (
                   <div key={task.id} className="flex items-center justify-between border-b border-gray-100 py-2">

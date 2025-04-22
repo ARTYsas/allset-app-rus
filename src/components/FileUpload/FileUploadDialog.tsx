@@ -65,7 +65,7 @@ export function FileUploadDialog({ open, onOpenChange, onUpload }: FileUploadDia
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Upload Files</DialogTitle>
+          <DialogTitle>Загрузка файлов</DialogTitle>
         </DialogHeader>
         
         <div
@@ -78,9 +78,9 @@ export function FileUploadDialog({ open, onOpenChange, onUpload }: FileUploadDia
         >
           <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
           <p className="mt-2 text-sm text-muted-foreground">
-            Drag and drop your files here, or
+            Перетащите файлы сюда, или
             <label className="relative ml-1 text-primary hover:underline cursor-pointer">
-              browse
+              выберите
               <input
                 type="file"
                 multiple
@@ -93,7 +93,7 @@ export function FileUploadDialog({ open, onOpenChange, onUpload }: FileUploadDia
 
         {files.length > 0 && (
           <div className="mt-4">
-            <h4 className="text-sm font-medium mb-2">Selected files:</h4>
+            <h4 className="text-sm font-medium mb-2">Выбранные файлы:</h4>
             <div className="space-y-2">
               {files.map((file, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm">
@@ -108,10 +108,10 @@ export function FileUploadDialog({ open, onOpenChange, onUpload }: FileUploadDia
 
         <div className="mt-4 flex justify-end gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            Отмена
           </Button>
           <Button onClick={handleUpload}>
-            Upload {files.length > 0 && `(${files.length})`}
+            Загрузить {files.length > 0 && `(${files.length})`}
           </Button>
         </div>
       </DialogContent>

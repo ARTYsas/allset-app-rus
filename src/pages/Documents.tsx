@@ -55,12 +55,12 @@ const Documents = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Documents</h1>
-          <p className="text-muted-foreground">Manage your business documents</p>
+          <h1 className="text-3xl font-bold tracking-tight">Документы</h1>
+          <p className="text-muted-foreground">Управление бизнес-документами</p>
         </div>
         <Button onClick={() => setShowTemplateDialog(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
-          Create Document
+          Создать документ
         </Button>
       </div>
 
@@ -79,10 +79,10 @@ const Documents = () => {
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">
-                    Type: {doc.type} • Size: {doc.size}
+                    Тип: {doc.type} • Размер: {doc.size}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Last modified: {doc.lastModified}
+                    Изменен: {doc.lastModified}
                   </p>
                 </div>
                 <div className="flex space-x-2">

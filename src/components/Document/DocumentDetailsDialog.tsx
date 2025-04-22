@@ -45,10 +45,10 @@ export function DocumentDetailsDialog({ document, open, onOpenChange }: Document
         
         <div className="flex justify-between items-center text-sm text-muted-foreground mb-4">
           <div>
-            Type: {document.type} • Size: {document.size}
+            Тип: {document.type} • Размер: {document.size}
           </div>
           <div>
-            Last modified: {document.lastModified}
+            Изменен: {document.lastModified}
           </div>
         </div>
         
@@ -59,7 +59,7 @@ export function DocumentDetailsDialog({ document, open, onOpenChange }: Document
         <div className="flex justify-end mt-4">
           <Button>
             <Download className="mr-2 h-4 w-4" />
-            Download
+            Скачать
           </Button>
         </div>
       </DialogContent>

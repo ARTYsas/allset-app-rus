@@ -46,14 +46,14 @@ const Clients = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Clients</h1>
-          <p className="text-muted-foreground">Manage your client relationships</p>
+          <h1 className="text-3xl font-bold tracking-tight">Клиенты</h1>
+          <p className="text-muted-foreground">Управление отношениями с клиентами</p>
         </div>
         <ClientFormDialog
           trigger={
             <Button>
               <UserPlus className="mr-2 h-4 w-4" />
-              Add Client
+              Добавить клиента
             </Button>
           }
           onSubmit={handleCreateClient}

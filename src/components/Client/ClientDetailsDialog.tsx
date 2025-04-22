@@ -90,28 +90,28 @@ export function ClientDetailsDialog({ client, open, onOpenChange }: ClientDetail
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Client Details</DialogTitle>
+          <DialogTitle>Детали клиента</DialogTitle>
         </DialogHeader>
         <Card>
           <CardContent className="space-y-4 pt-4">
             <div className="flex items-center space-x-4">
               <Building2 className="h-6 w-6 text-gray-500" />
               <div>
-                <p className="text-sm font-medium text-gray-500">Company Name</p>
+                <p className="text-sm font-medium text-gray-500">Название компании</p>
                 <p className="text-lg font-semibold">{client.name}</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <Mail className="h-6 w-6 text-gray-500" />
               <div>
-                <p className="text-sm font-medium text-gray-500">Email</p>
+                <p className="text-sm font-medium text-gray-500">Эл. почта</p>
                 <p className="text-lg">{client.email}</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <Phone className="h-6 w-6 text-gray-500" />
               <div>
-                <p className="text-sm font-medium text-gray-500">Phone</p>
+                <p className="text-sm font-medium text-gray-500">Телефон</p>
                 <p className="text-lg">{client.phone}</p>
               </div>
             </div>
@@ -130,7 +130,7 @@ export function ClientDetailsDialog({ client, open, onOpenChange }: ClientDetail
         <div className="mt-6">
           <h3 className="text-lg font-medium flex items-center mb-4">
             <Briefcase className="mr-2 h-5 w-5" />
-            Client Projects
+            Проекты клиента
           </h3>
           
           {clientProjects.length > 0 ? (
@@ -144,7 +144,7 @@ export function ClientDetailsDialog({ client, open, onOpenChange }: ClientDetail
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground">No projects for this client yet.</p>
+            <p className="text-muted-foreground">У клиента пока нет проектов.</p>
           )}
         </div>
         

@@ -28,7 +28,7 @@ export function CreateInvoiceDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Create New Invoice</DialogTitle>
+          <DialogTitle>Создать новый счет</DialogTitle>
         </DialogHeader>
         <InvoiceForm
           clients={mockClients}

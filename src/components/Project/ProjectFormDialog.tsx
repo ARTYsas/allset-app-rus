@@ -25,13 +25,21 @@ interface ProjectFormDialogProps {
 
 // Mock clients for the dropdown
 const mockClients = [
-  { id: 1, name: "Tech Solutions Inc." },
-  { id: 2, name: "Digital Marketing Pro" },
-  { id: 3, name: "Web Design Studio" }
+  { id: 1, name: "ООО Тех Решения" },
+  { id: 2, name: "Диджитал Маркетинг Про" },
+  { id: 3, name: "Веб-Дизайн Студия" }
 ];
 
 // Project statuses
-const projectStatuses = ["Ready", "In Progress", "Frozen", "Canceled"];
+const projectStatuses = ["Готов", "В процессе", "Заморожен", "Отменен"];
+
+// Mapping for English status values (API expects English)
+const statusMapping: {[key: string]: string} = {
+  "Готов": "Ready",
+  "В процессе": "In Progress",
+  "Заморожен": "Frozen",
+  "Отменен": "Canceled"
+};
 
 export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormDialogProps) {
   const { toast } = useToast();
@@ -41,7 +49,7 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
     client: "",
     deadline: new Date(),
     team: 1,
-    status: "In Progress",
+    status: "В процессе",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -49,8 +57,8 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
     
     if (!formData.name || !formData.clientId) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: "Ошибка",
+        description: "Пожалуйста, заполните все обязательные поля",
         variant: "destructive"
       });
       return;
@@ -62,6 +70,7 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
     onSubmit({
       ...formData,
       client,
+      status: statusMapping[formData.status] || formData.status, // Convert to English for API
       deadline: format(formData.deadline, "yyyy-MM-dd"),
     });
     
@@ -72,14 +81,14 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
       client: "",
       deadline: new Date(),
       team: 1,
-      status: "In Progress",
+      status: "В процессе",
     });
     
     onOpenChange(false);
     
     toast({
-      title: "Success",
-      description: "Project has been created successfully",
+      title: "Успешно",
+      description: "Проект успешно создан",
     });
   };
 
@@ -87,28 +96,28 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Create New Project</DialogTitle>
+          <DialogTitle>Создать новый проект</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Project Name</Label>
+            <Label htmlFor="name">Название проекта</Label>
             <Input
               id="name"
-              placeholder="E-commerce Website Redesign"
+              placeholder="Редизайн интернет-магазина"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="client">Client</Label>
+            <Label htmlFor="client">Клиент</Label>
             <Select
               value={formData.clientId}
               onValueChange={(value) => setFormData({ ...formData, clientId: value })}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select client" />
+                <SelectValue placeholder="Выберите клиента" />
               </SelectTrigger>
               <SelectContent>
                 {mockClients.map((client) => (
@@ -121,7 +130,7 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="deadline">Deadline</Label>
+            <Label htmlFor="deadline">Срок</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -132,7 +141,7 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
                   {formData.deadline ? (
                     format(formData.deadline, "PPP")
                   ) : (
-                    <span>Pick a date</span>
+                    <span>Выберите дату</span>
                   )}
                 </Button>
               </PopoverTrigger>
@@ -148,7 +157,7 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="team">Team Size</Label>
+            <Label htmlFor="team">Размер команды</Label>
             <Input
               id="team"
               type="number"
@@ -159,13 +168,13 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
+            <Label htmlFor="status">Статус</Label>
             <Select
               value={formData.status}
               onValueChange={(value) => setFormData({ ...formData, status: value })}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select status" />
+                <SelectValue placeholder="Выберите статус" />
               </SelectTrigger>
               <SelectContent>
                 {projectStatuses.map((status) => (
@@ -179,10 +188,10 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
           
           <div className="flex justify-end space-x-2 pt-4">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              Отмена
             </Button>
             <Button type="submit">
-              Create Project
+              Создать проект
             </Button>
           </div>
         </form>

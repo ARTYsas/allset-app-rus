@@ -34,8 +34,8 @@ export function ClientFormDialog({ onSubmit, trigger }: ClientFormDialogProps) {
     onSubmit(formData);
     setOpen(false);
     toast({
-      title: "Success",
-      description: "Client has been created successfully",
+      title: "Успешно",
+      description: "Клиент успешно создан",
     });
   };
 
@@ -44,39 +44,39 @@ export function ClientFormDialog({ onSubmit, trigger }: ClientFormDialogProps) {
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Client</DialogTitle>
+          <DialogTitle>Добавить нового клиента</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Company Name</Label>
+            <Label htmlFor="name">Название компании</Label>
             <Input
               id="name"
-              placeholder="Tech Solutions Inc."
+              placeholder="ООО Тех Решения"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Эл. почта</Label>
             <Input
               id="email"
               type="email"
-              placeholder="contact@company.com"
+              placeholder="info@company.ru"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone</Label>
+            <Label htmlFor="phone">Телефон</Label>
             <Input
               id="phone"
-              placeholder="+1 234 567 890"
+              placeholder="+7 495 123 45 67"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             />
           </div>
           <div className="space-y-2">
-            <Label>Status</Label>
+            <Label>Статус</Label>
             <Select
               value={formData.status}
               onValueChange={(value: "Active" | "Inactive") => 
@@ -87,12 +87,12 @@ export function ClientFormDialog({ onSubmit, trigger }: ClientFormDialogProps) {
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Inactive">Inactive</SelectItem>
+                <SelectItem value="Active">Активный</SelectItem>
+                <SelectItem value="Inactive">Неактивный</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <Button type="submit" className="w-full">Create Client</Button>
+          <Button type="submit" className="w-full">Создать клиента</Button>
         </form>
       </DialogContent>
     </Dialog>

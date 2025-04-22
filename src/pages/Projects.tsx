@@ -15,7 +15,7 @@ import { ProjectFormDialog } from '@/components/Project/ProjectFormDialog';
 import { ProjectDetailsDialog } from '@/components/Project/ProjectDetailsDialog';
 
 // Project statuses
-const projectStatuses = ["All", "Ready", "In Progress", "Frozen", "Canceled"];
+const projectStatuses = ["Все", "Готов", "В процессе", "Заморожен", "Отменен"];
 
 const mockProjects = [
   {
@@ -101,7 +101,7 @@ const mockProjects = [
 ];
 
 const Projects = () => {
-  const [statusFilter, setStatusFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("Все");
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [projects, setProjects] = useState(mockProjects);
   const [showProjectForm, setShowProjectForm] = useState(false);
@@ -125,12 +125,12 @@ const Projects = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Projects</h1>
-          <p className="text-muted-foreground">Track your ongoing projects</p>
+          <h1 className="text-3xl font-bold tracking-tight">Проекты</h1>
+          <p className="text-muted-foreground">Отслеживание текущих проектов</p>
         </div>
         <Button onClick={() => setShowProjectForm(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
-          New Project
+          Новый проект
         </Button>
       </div>
 
@@ -155,7 +155,7 @@ const Projects = () => {
           </Select>
         </div>
         <div className="text-sm text-muted-foreground">
-          Showing {filteredProjects.length} of {projects.length} projects
+          Показано {filteredProjects.length} из {projects.length} проектов
         </div>
       </div>
 
@@ -172,25 +172,25 @@ const Projects = () => {
             <CardContent>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Client:</span>
+                  <span className="text-sm text-muted-foreground">Клиент:</span>
                   <span className="font-medium">{project.client}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Deadline:</span>
+                  <span className="text-sm text-muted-foreground">Срок:</span>
                   <div className="flex items-center">
                     <Clock className="mr-2 h-4 w-4" />
                     <span>{project.deadline}</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Team:</span>
+                  <span className="text-sm text-muted-foreground">Команда:</span>
                   <div className="flex items-center">
                     <Users className="mr-2 h-4 w-4" />
-                    <span>{project.team} members</span>
+                    <span>{project.team} сотрудников</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Status:</span>
+                  <span className="text-sm text-muted-foreground">Статус:</span>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     project.status === "Ready" ? "bg-green-100 text-green-800" :
                     project.status === "In Progress" ? "bg-blue-100 text-blue-800" :
@@ -203,7 +203,7 @@ const Projects = () => {
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Progress</span>
+                    <span className="text-sm text-muted-foreground">Прогресс</span>
                     <span className="text-sm font-medium">{project.progress}%</span>
                   </div>
                   <Progress value={project.progress} className="h-2" />

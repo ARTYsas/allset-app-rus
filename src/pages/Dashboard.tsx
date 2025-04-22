@@ -87,8 +87,8 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">Overview of your IT business</p>
+          <h1 className="text-3xl font-bold tracking-tight">Панель управления</h1>
+          <p className="text-muted-foreground">Обзор вашего ИТ-бизнеса</p>
         </div>
       </div>
 
@@ -98,13 +98,13 @@ const Dashboard = () => {
           onClick={() => navigateToSection('/clients')}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
+            <CardTitle className="text-sm font-medium">Всего клиентов</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">12</div>
             <div className="flex items-center justify-between">
-              <p className="text-xs text-muted-foreground">+2 this month</p>
+              <p className="text-xs text-muted-foreground">+2 в этом месяце</p>
               <ArrowRight className="h-4 w-4" />
             </div>
           </CardContent>
@@ -115,13 +115,13 @@ const Dashboard = () => {
           onClick={() => navigateToSection('/projects')}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
+            <CardTitle className="text-sm font-medium">Активные проекты</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">8</div>
             <div className="flex items-center justify-between">
-              <p className="text-xs text-muted-foreground">3 due this week</p>
+              <p className="text-xs text-muted-foreground">3 завершаются на этой неделе</p>
               <ArrowRight className="h-4 w-4" />
             </div>
           </CardContent>
@@ -132,13 +132,13 @@ const Dashboard = () => {
           onClick={() => navigateToSection('/finances')}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Monthly Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium">Ежемесячный доход</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$12,450</div>
+            <div className="text-2xl font-bold">₽895,000</div>
             <div className="flex items-center justify-between">
-              <p className="text-xs text-muted-foreground">+18% from last month</p>
+              <p className="text-xs text-muted-foreground">+18% по сравнению с прошлым месяцем</p>
               <ArrowRight className="h-4 w-4" />
             </div>
           </CardContent>
@@ -149,13 +149,13 @@ const Dashboard = () => {
           onClick={() => navigateToSection('/documents')}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Invoices</CardTitle>
+            <CardTitle className="text-sm font-medium">Ожидающие счета</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3</div>
             <div className="flex items-center justify-between">
-              <p className="text-xs text-muted-foreground">$4,350 outstanding</p>
+              <p className="text-xs text-muted-foreground">₽314,000 к оплате</p>
               <ArrowRight className="h-4 w-4" />
             </div>
           </CardContent>
@@ -164,8 +164,8 @@ const Dashboard = () => {
 
       <Tabs defaultValue="tasks" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="tasks">Active Tasks</TabsTrigger>
-          <TabsTrigger value="recent">Recent Activity</TabsTrigger>
+          <TabsTrigger value="tasks">Текущие задачи</TabsTrigger>
+          <TabsTrigger value="recent">Последняя активность</TabsTrigger>
         </TabsList>
         <TabsContent value="tasks" className="space-y-4">
           <KanbanBoard 
@@ -179,31 +179,31 @@ const Dashboard = () => {
         <TabsContent value="recent">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+              <CardTitle>Последняя активность</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-8">
                 {/* Activity items */}
                 <div className="flex items-center">
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Invoice #INV-001 paid</p>
-                    <p className="text-sm text-muted-foreground">Client: Tech Solutions Inc.</p>
+                    <p className="text-sm font-medium">Счет #ИНВ-001 оплачен</p>
+                    <p className="text-sm text-muted-foreground">Клиент: ООО "Тех Решения"</p>
                   </div>
-                  <div className="ml-auto text-sm text-muted-foreground">2 hours ago</div>
+                  <div className="ml-auto text-sm text-muted-foreground">2 часа назад</div>
                 </div>
                 <div className="flex items-center">
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">New project started</p>
-                    <p className="text-sm text-muted-foreground">Project: E-commerce Website Redesign</p>
+                    <p className="text-sm font-medium">Начат новый проект</p>
+                    <p className="text-sm text-muted-foreground">Проект: Редизайн интернет-магазина</p>
                   </div>
-                  <div className="ml-auto text-sm text-muted-foreground">Yesterday</div>
+                  <div className="ml-auto text-sm text-muted-foreground">Вчера</div>
                 </div>
                 <div className="flex items-center">
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Contract signed</p>
-                    <p className="text-sm text-muted-foreground">Client: Digital Marketing Agency</p>
+                    <p className="text-sm font-medium">Контракт подписан</p>
+                    <p className="text-sm text-muted-foreground">Клиент: Диджитал Маркетинг Агентство</p>
                   </div>
-                  <div className="ml-auto text-sm text-muted-foreground">3 days ago</div>
+                  <div className="ml-auto text-sm text-muted-foreground">3 дня назад</div>
                 </div>
               </div>
             </CardContent>

@@ -18,7 +18,7 @@ interface InvoiceFormProps {
 const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
   const [selectedClientId, setSelectedClientId] = useState('');
   const [selectedProjectId, setSelectedProjectId] = useState('');
-  const [invoiceNumber, setInvoiceNumber] = useState(`INV-${Date.now().toString().slice(-6)}`);
+  const [invoiceNumber, setInvoiceNumber] = useState(`СЧТ-${Date.now().toString().slice(-6)}`);
   const [invoiceDate, setInvoiceDate] = useState(new Date().toISOString().split('T')[0]);
   const [dueDate, setDueDate] = useState(
     new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
@@ -89,20 +89,20 @@ const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle>Create Invoice</CardTitle>
+        <CardTitle>Создание счета</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="client">Client</Label>
+                <Label htmlFor="client">Клиент</Label>
                 <Select
                   value={selectedClientId}
                   onValueChange={setSelectedClientId}
                 >
                   <SelectTrigger id="client">
-                    <SelectValue placeholder="Select client" />
+                    <SelectValue placeholder="Выберите клиента" />
                   </SelectTrigger>
                   <SelectContent>
                     {clients.map(client => (
@@ -114,14 +114,14 @@ const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="project">Project</Label>
+                <Label htmlFor="project">Проект</Label>
                 <Select
                   value={selectedProjectId}
                   onValueChange={setSelectedProjectId}
                   disabled={!selectedClientId}
                 >
                   <SelectTrigger id="project">
-                    <SelectValue placeholder="Select project" />
+                    <SelectValue placeholder="Выберите проект" />
                   </SelectTrigger>
                   <SelectContent>
                     {filteredProjects.map(project => (
@@ -135,7 +135,7 @@ const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
             </div>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="invoiceNumber">Invoice Number</Label>
+                <Label htmlFor="invoiceNumber">Номер счета</Label>
                 <Input
                   id="invoiceNumber"
                   value={invoiceNumber}
@@ -144,7 +144,7 @@ const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="invoiceDate">Invoice Date</Label>
+                  <Label htmlFor="invoiceDate">Дата счета</Label>
                   <Input
                     id="invoiceDate"
                     type="date"
@@ -153,7 +153,7 @@ const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="dueDate">Due Date</Label>
+                  <Label htmlFor="dueDate">Срок оплаты</Label>
                   <Input
                     id="dueDate"
                     type="date"
@@ -169,10 +169,10 @@ const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
 
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-medium">Invoice Items</h3>
+              <h3 className="text-lg font-medium">Позиции счета</h3>
               <Button type="button" variant="outline" size="sm" onClick={addItem}>
                 <PlusCircle className="h-4 w-4 mr-2" />
-                Add Item
+                Добавить позицию
               </Button>
             </div>
 
@@ -180,16 +180,16 @@ const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
               {items.map((item, index) => (
                 <div key={index} className="grid grid-cols-12 gap-4 items-end">
                   <div className="col-span-6">
-                    <Label htmlFor={`item-desc-${index}`}>Description</Label>
+                    <Label htmlFor={`item-desc-${index}`}>Описание</Label>
                     <Input
                       id={`item-desc-${index}`}
                       value={item.description || ''}
                       onChange={e => handleItemChange(index, 'description', e.target.value)}
-                      placeholder="Item description"
+                      placeholder="Описание услуги или товара"
                     />
                   </div>
                   <div className="col-span-1">
-                    <Label htmlFor={`item-qty-${index}`}>Qty</Label>
+                    <Label htmlFor={`item-qty-${index}`}>Кол-во</Label>
                     <Input
                       id={`item-qty-${index}`}
                       type="number"
@@ -200,7 +200,7 @@ const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
                     />
                   </div>
                   <div className="col-span-2">
-                    <Label htmlFor={`item-rate-${index}`}>Rate</Label>
+                    <Label htmlFor={`item-rate-${index}`}>Ставка</Label>
                     <Input
                       id={`item-rate-${index}`}
                       type="number"
@@ -211,7 +211,7 @@ const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
                     />
                   </div>
                   <div className="col-span-2">
-                    <Label htmlFor={`item-amount-${index}`}>Amount</Label>
+                    <Label htmlFor={`item-amount-${index}`}>Сумма</Label>
                     <Input
                       id={`item-amount-${index}`}
                       readOnly
@@ -239,15 +239,15 @@ const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
           <div className="flex justify-end">
             <div className="w-64 space-y-2">
               <div className="flex justify-between">
-                <span className="font-medium">Total:</span>
-                <span className="font-bold">${calculateTotal().toFixed(2)}</span>
+                <span className="font-medium">Итого:</span>
+                <span className="font-bold">₽{calculateTotal().toFixed(2)}</span>
               </div>
             </div>
           </div>
 
           <div className="flex justify-end space-x-4">
-            <Button type="button" variant="outline">Cancel</Button>
-            <Button type="submit">Save Invoice</Button>
+            <Button type="button" variant="outline">Отмена</Button>
+            <Button type="submit">Сохранить счет</Button>
           </div>
         </form>
       </CardContent>
