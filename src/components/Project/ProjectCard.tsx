@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Clock, CheckCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -11,7 +10,7 @@ interface ProjectCardProps {
     progress: number;
     status: string;
     client?: string;
-    clientId?: number;
+    clientId?: string;
     tasks: Array<{ id: number; title: string; completed: boolean }>;
   };
   onClick?: () => void;

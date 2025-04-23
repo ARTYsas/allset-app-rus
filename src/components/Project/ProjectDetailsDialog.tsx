@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,19 +7,26 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Clock, CheckCircle, PlusCircle, Trash2, CalendarDays, ListChecks, Building2, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+
+interface ProjectTask {
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+interface ProjectDetailsProps {
+  id: number;
+  name: string;
+  deadline: string;
+  progress: number;
+  status: string;
+  client?: string;
+  clientId?: string;
+  tasks: ProjectTask[];
+}
 
 interface ProjectDetailsDialogProps {
-  project: {
-    id: number;
-    name: string;
-    deadline: string;
-    progress: number;
-    status: string;
-    client?: string;
-    clientId?: number;
-    tasks: Array<{ id: number; title: string; completed: boolean }>;
-  };
+  project: ProjectDetailsProps;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -29,7 +35,6 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
   const [tasks, setTasks] = useState(project.tasks);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const { toast } = useToast();
-  // const navigate = useNavigate();
 
   const completedTasks = tasks.filter(task => task.completed).length;
   const totalTasks = tasks.length;
@@ -89,13 +94,10 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
   const navigateToClient = () => {
     if (!project.clientId) return;
     
-    // In a real app, this would navigate to the client details
     toast({
       title: "Переход к клиенту",
       description: `Переход к карточке клиента ${project.client}`
     });
-    // Implementation would depend on your routing setup
-    // Example: navigate(`/clients/${project.clientId}`);
   };
 
   return (

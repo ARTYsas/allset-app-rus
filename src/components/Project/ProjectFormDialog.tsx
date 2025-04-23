@@ -17,14 +17,17 @@ import { format, parse } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-interface Project {
+// Interface matching the Project type from Projects.tsx
+export interface Project {
   id: number;
   name: string;
-  clientId: string;
+  clientId: string; // String type to match Projects.tsx
   client: string;
   deadline: string;
   team: number;
   status: string;
+  tasks?: Array<{ id: number; title: string; completed: boolean }>;
+  progress?: number;
 }
 
 interface ProjectFormDialogProps {
@@ -37,9 +40,9 @@ interface ProjectFormDialogProps {
 
 // Mock clients for the dropdown
 const mockClients = [
-  { id: 1, name: "ООО Тех Решения" },
-  { id: 2, name: "Диджитал Маркетинг Про" },
-  { id: 3, name: "Веб-Дизайн Студия" }
+  { id: "1", name: "ООО Тех Решения" }, // Changed to string IDs
+  { id: "2", name: "Диджитал Маркетинг Про" },
+  { id: "3", name: "Веб-Дизайн Студия" }
 ];
 
 // Project statuses
@@ -75,7 +78,7 @@ export function ProjectFormDialog({
     if (defaultValues) {
       setFormData({
         name: defaultValues.name || "",
-        clientId: defaultValues.clientId.toString() || "",
+        clientId: defaultValues.clientId || "",
         client: defaultValues.client || "",
         deadline: defaultValues.deadline ? 
           (typeof defaultValues.deadline === 'string' ? 
@@ -101,7 +104,7 @@ export function ProjectFormDialog({
     }
 
     // Set the client name based on the selected client ID
-    const client = mockClients.find(c => c.id.toString() === formData.clientId)?.name || "";
+    const client = mockClients.find(c => c.id === formData.clientId)?.name || "";
     
     onSubmit({
       ...formData,
@@ -159,7 +162,7 @@ export function ProjectFormDialog({
               </SelectTrigger>
               <SelectContent>
                 {mockClients.map((client) => (
-                  <SelectItem key={client.id} value={client.id.toString()}>
+                  <SelectItem key={client.id} value={client.id}>
                     {client.name}
                   </SelectItem>
                 ))}
