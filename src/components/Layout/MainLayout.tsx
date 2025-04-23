@@ -1,6 +1,8 @@
 
-import { Sidebar } from './Sidebar';
-import { Toaster } from '@/components/ui/toaster';
+import React from "react";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -8,16 +10,21 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-      <main className="flex-1 overflow-auto">
-        <div className="p-6 max-w-7xl mx-auto">
-          {children}
-        </div>
-      </main>
-      <Toaster />
-    </div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-gray-50">
+        <AppSidebar />
+        <main className="flex-1 overflow-auto">
+          {/* SidebarTrigger (burger icon) floats in top-left for mobile, top-bar for desktop */}
+          <div className="lg:hidden flex px-4 pt-4">
+            <SidebarTrigger />
+          </div>
+          <div className="p-6 max-w-7xl mx-auto">{children}</div>
+        </main>
+        <Toaster />
+      </div>
+    </SidebarProvider>
   );
 };
 
 export default MainLayout;
+
