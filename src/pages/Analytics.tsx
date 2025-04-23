@@ -1,14 +1,37 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const mockData = [
-  { month: 'Jan', revenue: 4000, projects: 24 },
-  { month: 'Feb', revenue: 3000, projects: 13 },
-  { month: 'Mar', revenue: 2000, projects: 18 },
-  { month: 'Apr', revenue: 2780, projects: 29 },
-  { month: 'May', revenue: 1890, projects: 15 },
-  { month: 'Jun', revenue: 2390, projects: 21 },
+  { month: 'Янв', revenue: 4000, projects: 24 },
+  { month: 'Фев', revenue: 3000, projects: 13 },
+  { month: 'Мар', revenue: 2000, projects: 18 },
+  { month: 'Апр', revenue: 2780, projects: 29 },
+  { month: 'Май', revenue: 1890, projects: 15 },
+  { month: 'Июн', revenue: 2390, projects: 21 },
 ];
+
+const customTooltipStyle = {
+  backgroundColor: '#fff',
+  border: '1px solid #ccc',
+  padding: '10px',
+  borderRadius: '5px',
+};
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div style={customTooltipStyle}>
+        <p className="text-sm font-medium">{`Месяц: ${label}`}</p>
+        {payload[0]?.name === "revenue" && 
+          <p className="text-sm">{`Доход: ${payload[0].value.toLocaleString()} ₽`}</p>}
+        {payload[0]?.name === "projects" && 
+          <p className="text-sm">{`Проекты: ${payload[0].value}`}</p>}
+      </div>
+    );
+  }
+  return null;
+};
 
 const Analytics = () => {
   return (
@@ -30,9 +53,10 @@ const Analytics = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
-                  <Tooltip />
+                  <Tooltip content={<CustomTooltip />} />
                   <Line 
                     type="monotone" 
+                    name="revenue"
                     dataKey="revenue" 
                     stroke="#8884d8" 
                     strokeWidth={2}
@@ -54,8 +78,9 @@ const Analytics = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
-                  <Tooltip />
+                  <Tooltip content={<CustomTooltip />} />
                   <Bar 
+                    name="projects"
                     dataKey="projects" 
                     fill="#82ca9d"
                   />

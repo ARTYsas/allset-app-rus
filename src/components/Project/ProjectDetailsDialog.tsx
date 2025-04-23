@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { Clock, CheckCircle, PlusCircle, Trash2, CalendarDays, ListChecks } from "lucide-react";
+import { Clock, CheckCircle, PlusCircle, Trash2, CalendarDays, ListChecks, Building2, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface ProjectDetailsDialogProps {
   project: {
@@ -16,6 +17,8 @@ interface ProjectDetailsDialogProps {
     deadline: string;
     progress: number;
     status: string;
+    client?: string;
+    clientId?: number;
     tasks: Array<{ id: number; title: string; completed: boolean }>;
   };
   open: boolean;
@@ -26,6 +29,7 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
   const [tasks, setTasks] = useState(project.tasks);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const { toast } = useToast();
+  // const navigate = useNavigate();
 
   const completedTasks = tasks.filter(task => task.completed).length;
   const totalTasks = tasks.length;
@@ -82,6 +86,18 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
     }
   };
 
+  const navigateToClient = () => {
+    if (!project.clientId) return;
+    
+    // In a real app, this would navigate to the client details
+    toast({
+      title: "Переход к клиенту",
+      description: `Переход к карточке клиента ${project.client}`
+    });
+    // Implementation would depend on your routing setup
+    // Example: navigate(`/clients/${project.clientId}`);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px]">
@@ -98,6 +114,20 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
+              {project.client && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Клиент:</span>
+                  <Button 
+                    variant="link" 
+                    size="sm" 
+                    className="p-0 h-auto flex items-center"
+                    onClick={navigateToClient}
+                  >
+                    {project.client}
+                    <ExternalLink className="ml-1 h-3 w-3" />
+                  </Button>
+                </div>
+              )}
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Срок:</span>
                 <span>{project.deadline}</span>
@@ -105,10 +135,10 @@ export function ProjectDetailsDialog({ project, open, onOpenChange }: ProjectDet
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Статус:</span>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  project.status === "Completed" ? "bg-green-100 text-green-800" :
-                  project.status === "In Progress" ? "bg-blue-100 text-blue-800" :
-                  project.status === "Frozen" ? "bg-purple-100 text-purple-800" :
-                  project.status === "Canceled" ? "bg-red-100 text-red-800" :
+                  project.status === "Готов" || project.status === "Completed" ? "bg-green-100 text-green-800" :
+                  project.status === "В процессе" || project.status === "In Progress" ? "bg-blue-100 text-blue-800" :
+                  project.status === "Заморожен" || project.status === "Frozen" ? "bg-purple-100 text-purple-800" :
+                  project.status === "Отменен" || project.status === "Canceled" ? "bg-red-100 text-red-800" :
                   "bg-gray-100 text-gray-800"
                 }`}>
                   {getStatusDisplayText(project.status)}

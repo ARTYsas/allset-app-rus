@@ -1,10 +1,12 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Phone, Building2, Briefcase } from "lucide-react";
+import { Mail, Phone, Building2, Briefcase, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { ProjectCard } from "@/components/Project/ProjectCard";
 import { ProjectDetailsDialog } from "@/components/Project/ProjectDetailsDialog";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface ClientDetailsProps {
   client: {
@@ -23,59 +25,67 @@ const mockClientProjects = {
   1: [
     {
       id: 1,
-      name: "Website Redesign",
+      name: "Редизайн веб-сайта",
       deadline: "2024-05-15",
       progress: 75,
-      status: "In Progress",
+      status: "В процессе",
+      clientId: 1,
+      client: "ООО Тех Решения",
       tasks: [
-        { id: 1, title: "Design homepage", completed: true },
-        { id: 2, title: "Implement responsive design", completed: true },
-        { id: 3, title: "Add contact form", completed: false },
-        { id: 4, title: "SEO optimization", completed: false }
+        { id: 1, title: "Дизайн главной страницы", completed: true },
+        { id: 2, title: "Внедрить адаптивный дизайн", completed: true },
+        { id: 3, title: "Добавить контактную форму", completed: false },
+        { id: 4, title: "СЕО оптимизация", completed: false }
       ]
     },
     {
       id: 2,
-      name: "Marketing Campaign",
+      name: "Маркетинговая кампания",
       deadline: "2024-06-20",
       progress: 30,
-      status: "In Progress",
+      status: "В процессе",
+      clientId: 1,
+      client: "ООО Тех Решения",
       tasks: [
-        { id: 1, title: "Define target audience", completed: true },
-        { id: 2, title: "Create content plan", completed: true },
-        { id: 3, title: "Design visual assets", completed: false },
-        { id: 4, title: "Launch campaign", completed: false },
-        { id: 5, title: "Analyze results", completed: false }
+        { id: 1, title: "Определить целевую аудиторию", completed: true },
+        { id: 2, title: "Создать контент-план", completed: true },
+        { id: 3, title: "Дизайн визуальных материалов", completed: false },
+        { id: 4, title: "Запуск кампании", completed: false },
+        { id: 5, title: "Анализ результатов", completed: false }
       ]
     }
   ],
   2: [
     {
       id: 3,
-      name: "SEO Optimization",
+      name: "СЕО Оптимизация",
       deadline: "2024-04-30",
       progress: 45,
-      status: "In Progress",
+      status: "В процессе",
+      clientId: 2,
+      client: "ООО Диджитал Маркетинг",
       tasks: [
-        { id: 1, title: "Keyword research", completed: true },
-        { id: 2, title: "On-page optimization", completed: false },
-        { id: 3, title: "Content update", completed: false }
+        { id: 1, title: "Исследование ключевых слов", completed: true },
+        { id: 2, title: "Оптимизация на странице", completed: false },
+        { id: 3, title: "Обновление контента", completed: false }
       ]
     }
   ],
   3: [
     {
       id: 4,
-      name: "Mobile App Development",
+      name: "Разработка мобильного приложения",
       deadline: "2024-06-01",
       progress: 20,
-      status: "In Progress",
+      status: "В процессе",
+      clientId: 3,
+      client: "Веб-Дизайн Студия",
       tasks: [
-        { id: 1, title: "UI/UX design", completed: true },
-        { id: 2, title: "Frontend development", completed: false },
-        { id: 3, title: "Backend integration", completed: false },
-        { id: 4, title: "Testing", completed: false },
-        { id: 5, title: "App store submission", completed: false }
+        { id: 1, title: "UI/UX дизайн", completed: true },
+        { id: 2, title: "Фронтенд разработка", completed: false },
+        { id: 3, title: "Интеграция бэкенда", completed: false },
+        { id: 4, title: "Тестирование", completed: false },
+        { id: 5, title: "Публикация в магазинах приложений", completed: false }
       ]
     }
   ]
@@ -85,6 +95,16 @@ export function ClientDetailsDialog({ client, open, onOpenChange }: ClientDetail
   // Get projects for this client
   const clientProjects = mockClientProjects[client.id as keyof typeof mockClientProjects] || [];
   const [selectedProject, setSelectedProject] = useState<any>(null);
+  const { toast } = useToast();
+
+  const navigateToProject = (projectId: number) => {
+    // In a real app this would navigate to the project page
+    toast({
+      title: "Переход к проекту",
+      description: `Переход к проекту #${projectId}`,
+    });
+    // Implementation would depend on your routing setup
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -117,7 +137,7 @@ export function ClientDetailsDialog({ client, open, onOpenChange }: ClientDetail
             </div>
             <div className="pt-2">
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                client.status === "Active" 
+                client.status === "Активен" 
                   ? "bg-green-100 text-green-800" 
                   : "bg-gray-100 text-gray-800"
               }`}>
@@ -140,6 +160,12 @@ export function ClientDetailsDialog({ client, open, onOpenChange }: ClientDetail
                   key={project.id}
                   project={project}
                   onClick={() => setSelectedProject(project)}
+                  actionButton={
+                    <Button size="sm" variant="ghost" className="flex items-center">
+                      <ExternalLink className="mr-1 h-4 w-4" />
+                      <span>Перейти</span>
+                    </Button>
+                  }
                 />
               ))}
             </div>

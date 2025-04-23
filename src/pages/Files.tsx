@@ -1,5 +1,6 @@
+
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Upload, FolderOpen, File, Image, FileText } from 'lucide-react';
 import { FileUploadDialog } from '@/components/FileUpload/FileUploadDialog';
@@ -56,7 +57,7 @@ const Files = () => {
   const handleFileUpload = (files: File[]) => {
     toast({
       title: "Файлы загружены",
-      description: `${files.length} файлы загружены успешно.`,
+      description: `${files.length} ${files.length === 1 ? "файл загружен" : "файла загружено"} успешно.`,
     });
   };
 
@@ -83,7 +84,7 @@ const Files = () => {
                   <h3 className="font-medium">{file.name}</h3>
                   <p className="text-sm text-muted-foreground">
                     {file.type === "folder" 
-                      ? `${file.items} элементов • ${file.size}`
+                      ? `${file.items} ${file.items === 1 ? "элемент" : "элементов"} • ${file.size}`
                       : `${file.size} • Изменено ${file.modified}`
                     }
                   </p>

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -90,11 +91,11 @@ const Finances = () => {
   const { toast } = useToast();
   const [invoices, setInvoices] = useState(mockInvoices);
   const [receipts, setReceipts] = useState(mockReceipts);
-  const [statusFilter, setStatusFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("Все");
   const [showInvoiceSelect, setShowInvoiceSelect] = useState(false);
   const [showCreateInvoice, setShowCreateInvoice] = useState(false);
   
-  const filteredInvoices = statusFilter === "All" 
+  const filteredInvoices = statusFilter === "Все" 
     ? invoices 
     : invoices.filter(invoice => invoice.status === statusFilter);
 
@@ -130,7 +131,7 @@ const Finances = () => {
     const newInvoice = {
       id: invoices.length + 1,
       ...invoiceData,
-      status: "draft",
+      status: "Черновик",
     };
     setInvoices([...invoices, newInvoice]);
     toast({
@@ -165,7 +166,7 @@ const Finances = () => {
                   <SelectValue placeholder="Выберите статус" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="All">Все</SelectItem>
+                  <SelectItem value="Все">Все</SelectItem>
                   <SelectItem value="Черновик">Черновик</SelectItem>
                   <SelectItem value="Ожидает оплаты">Ожидает оплаты</SelectItem>
                   <SelectItem value="Оплачен">Оплачен</SelectItem>
@@ -191,7 +192,7 @@ const Finances = () => {
                     <TableHead>Клиент</TableHead>
                     <TableHead>Проект</TableHead>
                     <TableHead>Дата</TableHead>
-                    <TableHead>Дата погашения</TableHead>
+                    <TableHead>Срок оплаты</TableHead>
                     <TableHead>Сумма</TableHead>
                     <TableHead>Статус</TableHead>
                     <TableHead className="text-right">Действия</TableHead>
@@ -205,7 +206,7 @@ const Finances = () => {
                       <TableCell>{invoice.project}</TableCell>
                       <TableCell>{invoice.date}</TableCell>
                       <TableCell>{invoice.dueDate}</TableCell>
-                      <TableCell>{invoice.amount.toLocaleString()}</TableCell>
+                      <TableCell>{invoice.amount.toLocaleString()} ₽</TableCell>
                       <TableCell>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                           invoice.status === "Оплачен" ? "bg-green-100 text-green-800" :
@@ -270,7 +271,7 @@ const Finances = () => {
                       <TableCell>{receipt.invoiceNumber}</TableCell>
                       <TableCell>{receipt.client}</TableCell>
                       <TableCell>{receipt.date}</TableCell>
-                      <TableCell>{receipt.amount.toLocaleString()}</TableCell>
+                      <TableCell>{receipt.amount.toLocaleString()} ₽</TableCell>
                       <TableCell>{receipt.paymentMethod}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="icon">
@@ -305,6 +306,7 @@ const Finances = () => {
         open={showCreateInvoice}
         onOpenChange={setShowCreateInvoice}
         onSubmit={handleCreateInvoice}
+        hideRateField={true}
       />
     </div>
   );

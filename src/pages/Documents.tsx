@@ -2,53 +2,96 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, Download, Eye, PlusCircle, File } from 'lucide-react';
+import { FileText, Download, Eye, PlusCircle, File, Trash2 } from 'lucide-react';
 import { DocumentTemplateDialog } from '@/components/Document/DocumentTemplateDialog';
 import { DocumentDetailsDialog } from '@/components/Document/DocumentDetailsDialog';
 import { DocumentFormDialog } from '@/components/Document/DocumentFormDialog';
+import { useToast } from '@/hooks/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/alert-dialog';
 
 const mockDocuments = [
   {
     id: 1,
-    name: "Project Proposal - Tech Solutions",
+    name: "Предложение по проекту - Тех Решения",
     type: "PDF",
-    size: "2.5 MB",
+    size: "2.5 МБ",
     lastModified: "2024-03-15",
-    content: "This is a project proposal for Tech Solutions. It includes details about the project scope, timeline, and budget.",
+    content: "Это предложение по проекту для Тех Решения. Оно включает детали о масштабе проекта, сроках и бюджете.",
   },
   {
     id: 2,
-    name: "Service Agreement Template",
+    name: "Шаблон соглашения об услугах",
     type: "DOCX",
-    size: "1.8 MB",
+    size: "1.8 МБ",
     lastModified: "2024-03-10",
-    content: "This is a service agreement template. It includes terms and conditions for providing services to clients.",
+    content: "Это шаблон соглашения об услугах. Он включает условия предоставления услуг клиентам.",
   },
   {
     id: 3,
-    name: "Marketing Campaign Report",
+    name: "Отчет о маркетинговой кампании",
     type: "PDF",
-    size: "3.2 MB",
+    size: "3.2 МБ",
     lastModified: "2024-03-05",
-    content: "This is a marketing campaign report. It includes details about the campaign performance, budget, and results.",
+    content: "Это отчет о маркетинговой кампании. Он включает детали о производительности кампании, бюджете и результатах.",
   }
 ];
 
+interface Document {
+  id: number;
+  name: string;
+  type: string;
+  size: string;
+  lastModified: string;
+  content: string;
+}
+
 const Documents = () => {
-  const [documents, setDocuments] = useState(mockDocuments);
+  const [documents, setDocuments] = useState<Document[]>(mockDocuments);
   const [showTemplateDialog, setShowTemplateDialog] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState<any>(null);
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [showDocumentForm, setShowDocumentForm] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [documentToDelete, setDocumentToDelete] = useState<number | null>(null);
+  const { toast } = useToast();
 
   const handleAddDocument = (documentData: any) => {
     const newDocument = {
       id: documents.length + 1,
       ...documentData,
       lastModified: new Date().toISOString().split('T')[0],
-      size: "1.0 MB", // Default size
+      size: "1.0 МБ", // Default size
     };
     setDocuments([...documents, newDocument]);
+  };
+
+  const handleDeleteDocument = () => {
+    if (documentToDelete === null) return;
+    
+    const updatedDocuments = documents.filter(doc => doc.id !== documentToDelete);
+    setDocuments(updatedDocuments);
+    setDocumentToDelete(null);
+    setDeleteDialogOpen(false);
+    
+    toast({
+      title: "Успешно",
+      description: "Документ удален",
+    });
+  };
+
+  const openDeleteDialog = (docId: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setDocumentToDelete(docId);
+    setDeleteDialogOpen(true);
   };
 
   return (
@@ -96,6 +139,14 @@ const Documents = () => {
                   <Button variant="outline" size="sm">
                     <Download className="h-4 w-4" />
                   </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={(e) => openDeleteDialog(doc.id, e)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -130,6 +181,24 @@ const Documents = () => {
           onOpenChange={(open) => !open && setSelectedDocument(null)}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Это действие нельзя отменить. Документ будет безвозвратно удален.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteDocument} className="bg-red-500 hover:bg-red-700">
+              Удалить
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
