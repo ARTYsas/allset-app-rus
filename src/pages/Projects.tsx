@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,12 +36,30 @@ const statusMap: Record<string, string> = {
   "Completed": "Готов"
 };
 
-const mockProjects = [
+interface ProjectTask {
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+interface Project {
+  id: number;
+  name: string;
+  client: string;
+  clientId: string;
+  deadline: string;
+  progress: number;
+  team: number;
+  status: string;
+  tasks: ProjectTask[];
+}
+
+const mockProjects: Project[] = [
   {
     id: 1,
     name: "Редизайн платформы электронной коммерции",
     client: "ООО Тех Решения",
-    clientId: 1,
+    clientId: "1",
     deadline: "2024-05-15",
     progress: 75,
     team: 4,
@@ -58,7 +75,7 @@ const mockProjects = [
     id: 2,
     name: "Кампания SEO-оптимизации",
     client: "ООО Диджитал Маркетинг",
-    clientId: 2,
+    clientId: "2",
     deadline: "2024-04-30",
     progress: 45,
     team: 2,
@@ -74,7 +91,7 @@ const mockProjects = [
     id: 3,
     name: "Разработка мобильного приложения",
     client: "Веб-Дизайн Студия",
-    clientId: 3,
+    clientId: "3",
     deadline: "2024-06-01",
     progress: 20,
     team: 5,
@@ -90,7 +107,7 @@ const mockProjects = [
     id: 4,
     name: "Обновление фирменного стиля",
     client: "ООО Тех Решения",
-    clientId: 1,
+    clientId: "1",
     deadline: "2024-05-20",
     progress: 90,
     team: 3,
@@ -106,7 +123,7 @@ const mockProjects = [
     id: 5,
     name: "Стратегия контент-маркетинга",
     client: "ООО Диджитал Маркетинг",
-    clientId: 2,
+    clientId: "2",
     deadline: "2024-07-15",
     progress: 10,
     team: 2,
@@ -119,18 +136,6 @@ const mockProjects = [
     ]
   }
 ];
-
-interface Project {
-  id: number;
-  name: string;
-  client: string;
-  clientId: number;
-  deadline: string;
-  progress: number;
-  team: number;
-  status: string;
-  tasks: Array<{ id: number; title: string; completed: boolean }>;
-}
 
 const Projects = () => {
   const [statusFilter, setStatusFilter] = useState("Все");
@@ -340,7 +345,7 @@ const Projects = () => {
         open={showProjectForm}
         onOpenChange={setShowProjectForm}
         onSubmit={editingProject ? handleEditProject : handleCreateProject}
-        defaultValues={editingProject || undefined}
+        defaultValues={editingProject}
         isEditing={!!editingProject}
       />
 

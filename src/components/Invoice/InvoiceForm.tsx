@@ -13,9 +13,10 @@ interface InvoiceFormProps {
   clients: { id: string; name: string }[];
   projects: { id: string; name: string; clientId: string }[];
   onSubmit: (invoice: Omit<Invoice, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  hideRateField?: boolean;
 }
 
-const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
+const InvoiceForm = ({ clients, projects, onSubmit, hideRateField }: InvoiceFormProps) => {
   const [selectedClientId, setSelectedClientId] = useState('');
   const [selectedProjectId, setSelectedProjectId] = useState('');
   const [invoiceNumber, setInvoiceNumber] = useState(`СЧТ-${Date.now().toString().slice(-6)}`);
@@ -199,23 +200,27 @@ const InvoiceForm = ({ clients, projects, onSubmit }: InvoiceFormProps) => {
                       onChange={e => handleItemChange(index, 'quantity', Number(e.target.value))}
                     />
                   </div>
-                  <div className="col-span-2">
-                    <Label htmlFor={`item-rate-${index}`}>Ставка</Label>
-                    <Input
-                      id={`item-rate-${index}`}
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={item.rate || ''}
-                      onChange={e => handleItemChange(index, 'rate', Number(e.target.value))}
-                    />
-                  </div>
-                  <div className="col-span-2">
+                  {!hideRateField && (
+                    <div className="col-span-2">
+                      <Label htmlFor={`item-rate-${index}`}>Ставка</Label>
+                      <Input
+                        id={`item-rate-${index}`}
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={item.rate || ''}
+                        onChange={e => handleItemChange(index, 'rate', Number(e.target.value))}
+                      />
+                    </div>
+                  )}
+                  <div className={`col-span-${hideRateField ? '4' : '2'}`}>
                     <Label htmlFor={`item-amount-${index}`}>Сумма</Label>
                     <Input
                       id={`item-amount-${index}`}
-                      readOnly
-                      value={calculateItemAmount(item).toFixed(2)}
+                      type="number"
+                      value={hideRateField ? item.amount || 0 : calculateItemAmount(item).toFixed(2)}
+                      readOnly={!hideRateField}
+                      onChange={hideRateField ? (e) => handleItemChange(index, 'amount', Number(e.target.value)) : undefined}
                     />
                   </div>
                   <div className="col-span-1">
