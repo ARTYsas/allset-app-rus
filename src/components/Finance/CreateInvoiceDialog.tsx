@@ -7,12 +7,14 @@ interface CreateInvoiceDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (invoice: Omit<Invoice, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  hideRateField?: boolean;
 }
 
 export function CreateInvoiceDialog({
   open,
   onOpenChange,
   onSubmit,
+  hideRateField,
 }: CreateInvoiceDialogProps) {
   const mockClients = [
     { id: "1", name: "Tech Solutions Inc." },
@@ -34,6 +36,7 @@ export function CreateInvoiceDialog({
           clients={mockClients}
           projects={mockProjects}
           onSubmit={onSubmit}
+          hideRateField={hideRateField}
         />
       </DialogContent>
     </Dialog>

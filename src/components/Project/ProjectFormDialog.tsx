@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,14 +13,26 @@ import {
 } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+interface Project {
+  id: number;
+  name: string;
+  clientId: string;
+  client: string;
+  deadline: string;
+  team: number;
+  status: string;
+}
 
 interface ProjectFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: any) => void;
+  defaultValues?: Project;
+  isEditing?: boolean;
 }
 
 // Mock clients for the dropdown
@@ -41,7 +53,13 @@ const statusMapping: {[key: string]: string} = {
   "Отменен": "Canceled"
 };
 
-export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormDialogProps) {
+export function ProjectFormDialog({ 
+  open, 
+  onOpenChange, 
+  onSubmit,
+  defaultValues,
+  isEditing = false
+}: ProjectFormDialogProps) {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
@@ -51,6 +69,24 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
     team: 1,
     status: "В процессе",
   });
+
+  // Set form data when defaultValues change
+  useEffect(() => {
+    if (defaultValues) {
+      setFormData({
+        name: defaultValues.name || "",
+        clientId: defaultValues.clientId.toString() || "",
+        client: defaultValues.client || "",
+        deadline: defaultValues.deadline ? 
+          (typeof defaultValues.deadline === 'string' ? 
+            parse(defaultValues.deadline, 'yyyy-MM-dd', new Date()) : 
+            defaultValues.deadline) : 
+          new Date(),
+        team: defaultValues.team || 1,
+        status: defaultValues.status || "В процессе",
+      });
+    }
+  }, [defaultValues]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,21 +110,23 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
       deadline: format(formData.deadline, "yyyy-MM-dd"),
     });
     
-    // Reset form
-    setFormData({
-      name: "",
-      clientId: "",
-      client: "",
-      deadline: new Date(),
-      team: 1,
-      status: "В процессе",
-    });
+    // Reset form if not editing
+    if (!isEditing) {
+      setFormData({
+        name: "",
+        clientId: "",
+        client: "",
+        deadline: new Date(),
+        team: 1,
+        status: "В процессе",
+      });
+    }
     
     onOpenChange(false);
     
     toast({
       title: "Успешно",
-      description: "Проект успешно создан",
+      description: isEditing ? "Проект успешно обновлен" : "Проект успешно создан",
     });
   };
 
@@ -96,7 +134,7 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Создать новый проект</DialogTitle>
+          <DialogTitle>{isEditing ? "Редактировать проект" : "Создать новый проект"}</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -191,7 +229,7 @@ export function ProjectFormDialog({ open, onOpenChange, onSubmit }: ProjectFormD
               Отмена
             </Button>
             <Button type="submit">
-              Создать проект
+              {isEditing ? "Сохранить" : "Создать проект"}
             </Button>
           </div>
         </form>
