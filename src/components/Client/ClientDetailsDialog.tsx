@@ -1,4 +1,3 @@
-
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Phone, Building2, Briefcase, ExternalLink } from "lucide-react";
@@ -21,6 +20,7 @@ interface ClientDetailsProps {
 }
 
 // Mock client projects - in a real app, this would come from your database
+// Updated clientId to be string type for consistency
 const mockClientProjects = {
   1: [
     {
@@ -29,7 +29,7 @@ const mockClientProjects = {
       deadline: "2024-05-15",
       progress: 75,
       status: "В процессе",
-      clientId: 1,
+      clientId: "1",
       client: "ООО Тех Решения",
       tasks: [
         { id: 1, title: "Дизайн главной страницы", completed: true },
@@ -44,7 +44,7 @@ const mockClientProjects = {
       deadline: "2024-06-20",
       progress: 30,
       status: "В процессе",
-      clientId: 1,
+      clientId: "1",
       client: "ООО Тех Решения",
       tasks: [
         { id: 1, title: "Определить целевую аудиторию", completed: true },
@@ -62,7 +62,7 @@ const mockClientProjects = {
       deadline: "2024-04-30",
       progress: 45,
       status: "В процессе",
-      clientId: 2,
+      clientId: "2",
       client: "ООО Диджитал Маркетинг",
       tasks: [
         { id: 1, title: "Исследование ключевых слов", completed: true },
@@ -78,7 +78,7 @@ const mockClientProjects = {
       deadline: "2024-06-01",
       progress: 20,
       status: "В процессе",
-      clientId: 3,
+      clientId: "3",
       client: "Веб-Дизайн Студия",
       tasks: [
         { id: 1, title: "UI/UX дизайн", completed: true },
