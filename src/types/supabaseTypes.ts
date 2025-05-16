@@ -1,4 +1,3 @@
-
 // Типы для работы с данными из Supabase
 export interface Client {
   id: string;
@@ -76,3 +75,4 @@ export interface MonthlyIncome {
   year: number;
   created_at?: string;
 }
+
