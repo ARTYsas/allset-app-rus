@@ -44,7 +44,8 @@ const Clients = () => {
           company: data.company || null,
           email: data.email,
           phone: data.phone || null,
-          industry: data.industry || null
+          industry: data.industry || null,
+          status: data.status
         }])
         .select();
 
@@ -77,7 +78,8 @@ const Clients = () => {
           company: data.company || null,
           email: data.email,
           phone: data.phone || null,
-          industry: data.industry || null
+          industry: data.industry || null,
+          status: data.status
         })
         .eq('id', editingClient.id);
 
@@ -178,7 +180,16 @@ const Clients = () => {
             <Card 
               key={client.id}
               className="cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => setSelectedClient(client)}
+              onClick={() => setSelectedClient({
+                id: client.id,
+                name: client.name,
+                email: client.email || '',
+                phone: client.phone || '',
+                status: client.status || 'Активен',
+                company: client.company,
+                industry: client.industry,
+                created_at: client.created_at
+              })}
             >
               <CardHeader>
                 <CardTitle className="text-xl flex justify-between items-start">
@@ -187,7 +198,16 @@ const Clients = () => {
                     <Button 
                       variant="ghost" 
                       size="icon"
-                      onClick={(e) => openEditDialog(client, e)}
+                      onClick={(e) => openEditDialog({
+                        id: client.id,
+                        name: client.name,
+                        email: client.email || '',
+                        phone: client.phone || '',
+                        status: client.status || 'Активен',
+                        company: client.company,
+                        industry: client.industry,
+                        created_at: client.created_at
+                      }, e)}
                       className="h-8 w-8"
                     >
                       <Edit className="h-4 w-4" />

@@ -12,6 +12,8 @@ export interface ClientFormData {
   email: string;
   phone: string;
   status: "Активен" | "Неактивен";
+  company?: string;
+  industry?: string;
 }
 
 interface ClientFormDialogProps {
@@ -22,6 +24,8 @@ interface ClientFormDialogProps {
     email: string;
     phone: string;
     status: string;
+    company?: string;
+    industry?: string;
   };
   isEditing?: boolean;
   open?: boolean;
@@ -42,7 +46,9 @@ export function ClientFormDialog({
     name: "",
     email: "",
     phone: "",
-    status: "Активен"
+    status: "Активен",
+    company: "",
+    industry: ""
   });
 
   // Handle controlled/uncontrolled state
@@ -57,7 +63,9 @@ export function ClientFormDialog({
         name: defaultValues.name,
         email: defaultValues.email,
         phone: defaultValues.phone,
-        status: defaultValues.status === "Активен" ? "Активен" : "Неактивен"
+        status: defaultValues.status === "Активен" ? "Активен" : "Неактивен",
+        company: defaultValues.company || "",
+        industry: defaultValues.industry || ""
       });
     }
   }, [defaultValues]);
@@ -80,12 +88,31 @@ export function ClientFormDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Название компании</Label>
+            <Label htmlFor="name">Имя/Название компании</Label>
             <Input
               id="name"
               placeholder="ООО Тех Решения"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="company">Название компании (опционально)</Label>
+            <Input
+              id="company"
+              placeholder="ООО Тех Решения"
+              value={formData.company}
+              onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="industry">Отрасль (опционально)</Label>
+            <Input
+              id="industry"
+              placeholder="IT, Финансы, и т.д."
+              value={formData.industry}
+              onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
             />
           </div>
           <div className="space-y-2">
@@ -96,6 +123,7 @@ export function ClientFormDialog({
               placeholder="info@company.ru"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              required
             />
           </div>
           <div className="space-y-2">

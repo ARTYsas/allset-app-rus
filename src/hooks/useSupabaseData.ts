@@ -191,6 +191,7 @@ export const useInvoices = () => {
         .order('date', { ascending: false });
       
       if (error) throw error;
+      
       return data.map(invoice => ({
         ...invoice,
         clientName: invoice.clients ? invoice.clients.name : '',
@@ -210,19 +211,49 @@ export const usePayments = () => {
         .from('payments')
         .select(`
           *,
-          invoices(number, client_id, project_id),
-          invoices.clients(name),
-          invoices.projects(name)
+          invoices(number, client_id, project_id)
         `)
         .order('date', { ascending: false });
       
       if (error) throw error;
-      return data.map(payment => ({
-        ...payment,
-        invoiceNumber: payment.invoices ? payment.invoices.number : '',
-        clientName: payment.invoices?.clients ? payment.invoices.clients.name : '',
-        projectName: payment.invoices?.projects ? payment.invoices.projects.name : '',
-      }));
+      
+      const enhancedData = [];
+      
+      for (const payment of data) {
+        if (payment.invoices) {
+          const invoice = payment.invoices;
+          
+          // Получаем информацию о клиенте
+          const { data: clientData } = await supabase
+            .from('clients')
+            .select('name')
+            .eq('id', invoice.client_id)
+            .single();
+            
+          // Получаем информацию о проекте
+          const { data: projectData } = await supabase
+            .from('projects')
+            .select('name')
+            .eq('id', invoice.project_id)
+            .single();
+          
+          enhancedData.push({
+            ...payment,
+            invoiceNumber: invoice.number,
+            clientName: clientData ? clientData.name : '',
+            projectName: projectData ? projectData.name : '',
+          });
+        } else {
+          enhancedData.push({
+            ...payment,
+            invoiceNumber: '',
+            clientName: '',
+            projectName: '',
+          });
+        }
+      }
+      
+      return enhancedData;
     }
   });
 };
