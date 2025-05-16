@@ -61,8 +61,8 @@ export function ClientFormDialog({
     if (defaultValues) {
       setFormData({
         name: defaultValues.name,
-        email: defaultValues.email,
-        phone: defaultValues.phone,
+        email: defaultValues.email || "",
+        phone: defaultValues.phone || "",
         status: defaultValues.status === "Активен" ? "Активен" : "Неактивен",
         company: defaultValues.company || "",
         industry: defaultValues.industry || ""

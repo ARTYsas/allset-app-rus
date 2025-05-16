@@ -1,3 +1,4 @@
+
 // Типы для работы с данными из Supabase
 export interface Client {
   id: string;
@@ -15,6 +16,10 @@ export interface Project {
   name: string;
   description?: string;
   client_id?: string;
+  client?: {
+    name: string;
+    company?: string;
+  };
   start_date: string;
   end_date?: string;
   status: string;
@@ -28,6 +33,13 @@ export interface Document {
   type: string;
   client_id?: string;
   project_id?: string;
+  client?: {
+    name: string;
+    company?: string;
+  };
+  project?: {
+    name: string;
+  };
   file_url: string;
   created_at?: string;
   updated_at?: string;
@@ -39,6 +51,9 @@ export interface FileItem {
   type: string;
   size: string;
   project_id?: string;
+  project?: {
+    name: string;
+  };
   file_url: string;
   created_at?: string;
   updated_at?: string;
@@ -48,8 +63,18 @@ export interface Invoice {
   id: string;
   number: string;
   client_id: string;
+  client?: {
+    name: string;
+    company?: string;
+  };
   project_id: string;
+  project?: {
+    name: string;
+  };
   document_id?: string;
+  document?: {
+    name: string;
+  };
   amount: number;
   date: string;
   due_date: string;
@@ -61,6 +86,16 @@ export interface Invoice {
 export interface Payment {
   id: string;
   invoice_id: string;
+  invoice?: {
+    number: string;
+  };
+  client?: {
+    name: string;
+    company?: string;
+  };
+  project?: {
+    name: string;
+  };
   amount: number;
   date: string;
   payment_method: string;
@@ -75,4 +110,3 @@ export interface MonthlyIncome {
   year: number;
   created_at?: string;
 }
-
