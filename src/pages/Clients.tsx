@@ -180,16 +180,7 @@ const Clients = () => {
             <Card 
               key={client.id}
               className="cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => setSelectedClient({
-                id: client.id,
-                name: client.name,
-                email: client.email || '',
-                phone: client.phone || '',
-                status: client.status || 'Активен',
-                company: client.company,
-                industry: client.industry,
-                created_at: client.created_at
-              })}
+              onClick={() => setSelectedClient(client)}
             >
               <CardHeader>
                 <CardTitle className="text-xl flex justify-between items-start">
@@ -198,16 +189,7 @@ const Clients = () => {
                     <Button 
                       variant="ghost" 
                       size="icon"
-                      onClick={(e) => openEditDialog({
-                        id: client.id,
-                        name: client.name,
-                        email: client.email || '',
-                        phone: client.phone || '',
-                        status: client.status || 'Активен',
-                        company: client.company,
-                        industry: client.industry,
-                        created_at: client.created_at
-                      }, e)}
+                      onClick={(e) => openEditDialog(client, e)}
                       className="h-8 w-8"
                     >
                       <Edit className="h-4 w-4" />
@@ -256,7 +238,14 @@ const Clients = () => {
           open={!!editingClient}
           onOpenChange={(open) => !open && setEditingClient(null)}
           onSubmit={handleEditClient}
-          defaultValues={editingClient}
+          defaultValues={{
+            name: editingClient.name,
+            email: editingClient.email || '',
+            phone: editingClient.phone || '',
+            status: editingClient.status || 'Активен',
+            company: editingClient.company || '',
+            industry: editingClient.industry || ''
+          }}
           isEditing={true}
         />
       )}
