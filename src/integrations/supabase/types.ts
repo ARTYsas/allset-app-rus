@@ -9,7 +9,101 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      clients: {
+        Row: {
+          company: string | null
+          created_at: string | null
+          id: string
+          industry: string | null
+          name: string
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string | null
+          id?: string
+          industry?: string | null
+          name: string
+        }
+        Update: {
+          company?: string | null
+          created_at?: string | null
+          id?: string
+          industry?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
+      monthly_income: {
+        Row: {
+          created_at: string | null
+          id: string
+          month: string
+          projects: number
+          revenue: number
+          year: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          month: string
+          projects: number
+          revenue: number
+          year: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          month?: string
+          projects?: number
+          revenue?: number
+          year?: number
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          budget: number | null
+          client_id: string | null
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          name: string
+          start_date: string
+          status: string
+        }
+        Insert: {
+          budget?: number | null
+          client_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name: string
+          start_date: string
+          status: string
+        }
+        Update: {
+          budget?: number | null
+          client_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name?: string
+          start_date?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
