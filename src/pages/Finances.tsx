@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -18,127 +18,124 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { Filter, Download, PlusCircle, FileText, Check, CreditCard } from 'lucide-react';
+import { Filter, Download, PlusCircle, FileText, CreditCard } from 'lucide-react';
 import { InvoiceSelectDialog } from '@/components/Finance/InvoiceSelectDialog';
 import { CreateInvoiceDialog } from '@/components/Finance/CreateInvoiceDialog';
 import { useToast } from '@/hooks/use-toast';
-
-const mockInvoices = [
-  {
-    id: 1,
-    number: "ИНВ-2024-001",
-    client: "ООО Тех Решения",
-    project: "Редизайн интернет-магазина",
-    amount: 350000,
-    date: "2024-03-10",
-    dueDate: "2024-04-10",
-    status: "Оплачен"
-  },
-  {
-    id: 2,
-    number: "ИНВ-2024-002",
-    client: "ООО Диджитал Маркетинг",
-    project: "SEO Оптимизация",
-    amount: 175000,
-    date: "2024-03-15",
-    dueDate: "2024-04-15",
-    status: "Ожидает оплаты"
-  },
-  {
-    id: 3,
-    number: "ИНВ-2024-003",
-    client: "Веб-Студия",
-    project: "Разработка мобильного приложения",
-    amount: 525000,
-    date: "2024-03-20",
-    dueDate: "2024-04-20",
-    status: "Просрочен"
-  },
-  {
-    id: 4,
-    number: "ИНВ-2024-004",
-    client: "ООО Тех Решения",
-    project: "Обновление брендинга",
-    amount: 210000,
-    date: "2024-03-25",
-    dueDate: "2024-04-25",
-    status: "Черновик"
-  }
-];
-
-const mockReceipts = [
-  {
-    id: 1,
-    number: "ПЛТ-2024-001",
-    invoiceNumber: "ИНВ-2024-001",
-    client: "ООО Тех Решения",
-    amount: 350000,
-    date: "2024-04-05",
-    paymentMethod: "Банковский перевод"
-  },
-  {
-    id: 2,
-    number: "ПЛТ-2024-002",
-    invoiceNumber: "ИНВ-2024-002",
-    client: "ООО Диджитал Маркетинг",
-    amount: 175000,
-    date: "2024-04-12",
-    paymentMethod: "Кредитная карта"
-  }
-];
+import { useInvoices, usePayments } from '@/hooks/useSupabaseData';
+import { supabase } from '@/integrations/supabase/client';
+import { Invoice } from '@/types/supabaseTypes';
 
 const Finances = () => {
-  const { toast } = useToast();
-  const [invoices, setInvoices] = useState(mockInvoices);
-  const [receipts, setReceipts] = useState(mockReceipts);
+  const { data: fetchedInvoices, isLoading: isLoadingInvoices, error: invoicesError, refetch: refetchInvoices } = useInvoices();
+  const { data: fetchedPayments, isLoading: isLoadingPayments, error: paymentsError, refetch: refetchPayments } = usePayments();
+  
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const [receipts, setReceipts] = useState<any[]>([]);
   const [statusFilter, setStatusFilter] = useState("Все");
   const [showInvoiceSelect, setShowInvoiceSelect] = useState(false);
   const [showCreateInvoice, setShowCreateInvoice] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (fetchedInvoices) {
+      setInvoices(fetchedInvoices);
+    }
+  }, [fetchedInvoices]);
+
+  useEffect(() => {
+    if (fetchedPayments) {
+      setReceipts(fetchedPayments);
+    }
+  }, [fetchedPayments]);
   
   const filteredInvoices = statusFilter === "Все" 
     ? invoices 
     : invoices.filter(invoice => invoice.status === statusFilter);
 
-  const handleCreateReceipt = (selectedInvoices: typeof mockInvoices) => {
-    const newReceipts = selectedInvoices.map((invoice, index) => ({
-      id: receipts.length + index + 1,
-      number: `ПЛТ-2024-${String(receipts.length + index + 1).padStart(3, '0')}`,
-      invoiceNumber: invoice.number,
-      client: invoice.client,
-      amount: invoice.amount,
-      date: new Date().toISOString().split('T')[0],
-      paymentMethod: "Банковский перевод"
-    }));
-    
-    setReceipts([...receipts, ...newReceipts]);
-    
-    const updatedInvoices = invoices.map(invoice => {
-      if (selectedInvoices.some(selected => selected.id === invoice.id)) {
-        return { ...invoice, status: "Оплачен" };
+  const handleCreateReceipt = async (selectedInvoices: Invoice[]) => {
+    try {
+      for (const invoice of selectedInvoices) {
+        // Создаем запись платежа
+        const { error: paymentError } = await supabase
+          .from('payments')
+          .insert([{
+            invoice_id: invoice.id,
+            amount: invoice.amount,
+            date: new Date().toISOString(),
+            payment_method: "Банковский перевод"
+          }]);
+
+        if (paymentError) throw paymentError;
+
+        // Обновляем статус счета
+        const { error: invoiceError } = await supabase
+          .from('invoices')
+          .update({ status: 'Оплачен' })
+          .eq('id', invoice.id);
+
+        if (invoiceError) throw invoiceError;
       }
-      return invoice;
-    });
-    
-    setInvoices(updatedInvoices);
-    
-    toast({
-      title: "Успех",
-      description: `${newReceipts.length} платеж(а/и) создан(ы) успешно`,
-    });
+      
+      toast({
+        title: "Успех",
+        description: `${selectedInvoices.length} платеж(а/и) создан(ы) успешно`,
+      });
+      
+      refetchInvoices();
+      refetchPayments();
+    } catch (error: any) {
+      console.error('Error creating payment:', error);
+      toast({
+        title: "Ошибка",
+        description: error.message || "Не удалось создать платеж",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleCreateInvoice = (invoiceData: any) => {
-    const newInvoice = {
-      id: invoices.length + 1,
-      ...invoiceData,
-      status: "Черновик",
-    };
-    setInvoices([...invoices, newInvoice]);
-    toast({
-      title: "Успех",
-      description: "Счет создан успешно",
-    });
+  const handleCreateInvoice = async (invoiceData: any) => {
+    try {
+      const { error } = await supabase
+        .from('invoices')
+        .insert([{
+          number: invoiceData.number,
+          client_id: invoiceData.client_id,
+          project_id: invoiceData.project_id,
+          document_id: invoiceData.document_id || null,
+          amount: invoiceData.amount,
+          date: invoiceData.date || new Date().toISOString(),
+          due_date: invoiceData.due_date || new Date(Date.now() + 30*24*60*60*1000).toISOString(), // 30 дней
+          status: 'Черновик'
+        }]);
+
+      if (error) throw error;
+      
+      toast({
+        title: "Успех",
+        description: "Счет создан успешно",
+      });
+      
+      refetchInvoices();
+    } catch (error: any) {
+      console.error('Error creating invoice:', error);
+      toast({
+        title: "Ошибка",
+        description: error.message || "Не удалось создать счет",
+        variant: "destructive"
+      });
+    }
   };
+
+  if (isLoadingInvoices || isLoadingPayments) {
+    return <div className="flex justify-center p-12">Загрузка данных...</div>;
+  }
+
+  if (invoicesError || paymentsError) {
+    return <div className="text-red-500 p-6">
+      Ошибка загрузки данных: {invoicesError ? (invoicesError as Error).message : (paymentsError as Error).message}
+    </div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -199,38 +196,38 @@ const Finances = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredInvoices.map((invoice) => (
-                    <TableRow key={invoice.id}>
-                      <TableCell className="font-medium">{invoice.number}</TableCell>
-                      <TableCell>{invoice.client}</TableCell>
-                      <TableCell>{invoice.project}</TableCell>
-                      <TableCell>{invoice.date}</TableCell>
-                      <TableCell>{invoice.dueDate}</TableCell>
-                      <TableCell>{invoice.amount.toLocaleString()} ₽</TableCell>
-                      <TableCell>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          invoice.status === "Оплачен" ? "bg-green-100 text-green-800" :
-                          invoice.status === "Ожидает оплаты" ? "bg-blue-100 text-blue-800" :
-                          invoice.status === "Просрочен" ? "bg-red-100 text-red-800" :
-                          "bg-gray-100 text-gray-800"
-                        }`}>
-                          {invoice.status}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button variant="ghost" size="icon">
-                          <Download className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  
-                  {filteredInvoices.length === 0 && (
+                  {filteredInvoices.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={8} className="text-center py-4 text-muted-foreground">
                         Нет счетов с выбранным фильтром.
                       </TableCell>
                     </TableRow>
+                  ) : (
+                    filteredInvoices.map((invoice) => (
+                      <TableRow key={invoice.id}>
+                        <TableCell className="font-medium">{invoice.number}</TableCell>
+                        <TableCell>{invoice.clientName}</TableCell>
+                        <TableCell>{invoice.projectName}</TableCell>
+                        <TableCell>{new Date(invoice.date).toLocaleDateString()}</TableCell>
+                        <TableCell>{new Date(invoice.due_date).toLocaleDateString()}</TableCell>
+                        <TableCell>{invoice.amount.toLocaleString()} ₽</TableCell>
+                        <TableCell>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            invoice.status === "Оплачен" ? "bg-green-100 text-green-800" :
+                            invoice.status === "Ожидает оплаты" ? "bg-blue-100 text-blue-800" :
+                            invoice.status === "Просрочен" ? "bg-red-100 text-red-800" :
+                            "bg-gray-100 text-gray-800"
+                          }`}>
+                            {invoice.status}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="ghost" size="icon">
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
                   )}
                 </TableBody>
               </Table>
@@ -256,7 +253,7 @@ const Finances = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Номер платежа</TableHead>
-                    <TableHead>Номер счета</TableHead>
+                    <TableHead>Счет</TableHead>
                     <TableHead>Клиент</TableHead>
                     <TableHead>Дата</TableHead>
                     <TableHead>Сумма</TableHead>
@@ -265,28 +262,28 @@ const Finances = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {receipts.map((receipt) => (
-                    <TableRow key={receipt.id}>
-                      <TableCell className="font-medium">{receipt.number}</TableCell>
-                      <TableCell>{receipt.invoiceNumber}</TableCell>
-                      <TableCell>{receipt.client}</TableCell>
-                      <TableCell>{receipt.date}</TableCell>
-                      <TableCell>{receipt.amount.toLocaleString()} ₽</TableCell>
-                      <TableCell>{receipt.paymentMethod}</TableCell>
-                      <TableCell className="text-right">
-                        <Button variant="ghost" size="icon">
-                          <FileText className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  
-                  {receipts.length === 0 && (
+                  {receipts.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center py-4 text-muted-foreground">
                         Нет платежей.
                       </TableCell>
                     </TableRow>
+                  ) : (
+                    receipts.map((receipt, index) => (
+                      <TableRow key={receipt.id}>
+                        <TableCell className="font-medium">ПЛТ-{String(index + 1).padStart(3, '0')}</TableCell>
+                        <TableCell>{receipt.invoiceNumber}</TableCell>
+                        <TableCell>{receipt.clientName}</TableCell>
+                        <TableCell>{new Date(receipt.date).toLocaleDateString()}</TableCell>
+                        <TableCell>{receipt.amount.toLocaleString()} ₽</TableCell>
+                        <TableCell>{receipt.payment_method}</TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="ghost" size="icon">
+                            <FileText className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
                   )}
                 </TableBody>
               </Table>
