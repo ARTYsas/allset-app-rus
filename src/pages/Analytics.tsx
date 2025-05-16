@@ -1,14 +1,13 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const mockData = [
-  { month: 'Янв', revenue: 4000, projects: 24 },
-  { month: 'Фев', revenue: 3000, projects: 13 },
-  { month: 'Мар', revenue: 2000, projects: 18 },
-  { month: 'Апр', revenue: 2780, projects: 29 },
-  { month: 'Май', revenue: 1890, projects: 15 },
-  { month: 'Июн', revenue: 2390, projects: 21 },
+  { month: 'Янв', revenue: 120000, projects: 14 },
+  { month: 'Фев', revenue: 95000, projects: 11 },
+  { month: 'Мар', revenue: 180000, projects: 18 },
+  { month: 'Апр', revenue: 210000, projects: 22 },
+  { month: 'Май', revenue: 270000, projects: 26 },
+  { month: 'Июн', revenue: 320000, projects: 24 },
 ];
 
 const customTooltipStyle = {
@@ -99,9 +98,9 @@ const Analytics = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₽1 160 000</div>
+            <div className="text-2xl font-bold">₽1 970 000</div>
             <p className="text-xs text-muted-foreground">
-              +20.1% к прошлому месяцу
+              +18.4% к прошлому месяцу
             </p>
           </CardContent>
         </Card>
@@ -112,9 +111,9 @@ const Analytics = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">120</div>
+            <div className="text-2xl font-bold">138</div>
             <p className="text-xs text-muted-foreground">
-              +12 к прошлому месяцу
+              +8 к прошлому месяцу
             </p>
           </CardContent>
         </Card>
@@ -125,9 +124,9 @@ const Analytics = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">98%</div>
+            <div className="text-2xl font-bold text-green-600">97%</div>
             <p className="text-xs text-muted-foreground">
-              +2% к прошлому месяцу
+              +1% к прошлому месяцу
             </p>
           </CardContent>
         </Card>
