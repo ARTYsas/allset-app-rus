@@ -1,3 +1,4 @@
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Phone, Building2, Briefcase, ExternalLink } from "lucide-react";
@@ -6,15 +7,10 @@ import { ProjectCard } from "@/components/Project/ProjectCard";
 import { ProjectDetailsDialog } from "@/components/Project/ProjectDetailsDialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { Client } from "@/types/supabaseTypes";
 
 interface ClientDetailsProps {
-  client: {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    status: string;
-  };
+  client: Client;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -22,7 +18,7 @@ interface ClientDetailsProps {
 // Mock client projects - in a real app, this would come from your database
 // Updated clientId to be string type for consistency
 const mockClientProjects = {
-  1: [
+  "1": [
     {
       id: 1,
       name: "Редизайн веб-сайта",
@@ -55,7 +51,7 @@ const mockClientProjects = {
       ]
     }
   ],
-  2: [
+  "2": [
     {
       id: 3,
       name: "СЕО Оптимизация",
@@ -71,7 +67,7 @@ const mockClientProjects = {
       ]
     }
   ],
-  3: [
+  "3": [
     {
       id: 4,
       name: "Разработка мобильного приложения",
@@ -92,7 +88,7 @@ const mockClientProjects = {
 };
 
 export function ClientDetailsDialog({ client, open, onOpenChange }: ClientDetailsProps) {
-  // Get projects for this client
+  // Get projects for this client - converted client.id to string to ensure it works as an index
   const clientProjects = mockClientProjects[client.id as keyof typeof mockClientProjects] || [];
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const { toast } = useToast();
