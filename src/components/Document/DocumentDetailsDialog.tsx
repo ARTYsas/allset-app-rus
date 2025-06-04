@@ -5,16 +5,12 @@ import { Download, FileText } from "lucide-react";
 
 interface DocumentDetailsDialogProps {
   document: {
-    id: string | number;
+    id: number;
     name: string;
     type: string;
-    size?: string;
-    lastModified?: string;
-    content?: string;
-    created_at?: string;
-    updated_at?: string;
-    clientName?: string;
-    projectName?: string;
+    size: string;
+    lastModified: string;
+    content: string;
   };
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -37,11 +33,6 @@ export function DocumentDetailsDialog({ document, open, onOpenChange }: Document
     });
   };
 
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return '';
-    return new Date(dateString).toLocaleDateString();
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
@@ -54,25 +45,12 @@ export function DocumentDetailsDialog({ document, open, onOpenChange }: Document
         
         <div className="flex justify-between items-center text-sm text-muted-foreground mb-4">
           <div>
-            Тип: {document.type} {document.size && `• Размер: ${document.size}`}
+            Тип: {document.type} • Размер: {document.size}
           </div>
           <div>
-            {document.lastModified ? 
-              `Изменен: ${document.lastModified}` : 
-              document.updated_at ? 
-                `Изменен: ${formatDate(document.updated_at)}` : 
-                `Создан: ${formatDate(document.created_at)}`
-            }
+            Изменен: {document.lastModified}
           </div>
         </div>
-        
-        {document.clientName || document.projectName ? (
-          <div className="text-sm text-muted-foreground mb-4">
-            {document.clientName && `Клиент: ${document.clientName}`}
-            {document.clientName && document.projectName && ' • '}
-            {document.projectName && `Проект: ${document.projectName}`}
-          </div>
-        ) : null}
         
         <div className="border rounded-md p-6 bg-white">
           {renderContent()}

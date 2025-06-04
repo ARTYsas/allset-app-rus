@@ -1,8 +1,8 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, Download, Eye, PlusCircle, Trash2 } from 'lucide-react';
+import { FileText, Download, Eye, PlusCircle, File, Trash2 } from 'lucide-react';
 import { DocumentTemplateDialog } from '@/components/Document/DocumentTemplateDialog';
 import { DocumentDetailsDialog } from '@/components/Document/DocumentDetailsDialog';
 import { DocumentFormDialog } from '@/components/Document/DocumentFormDialog';
@@ -17,101 +17,82 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/components/ui/alert-dialog';
-import { useDocuments } from '@/hooks/useSupabaseData';
-import { supabase } from '@/integrations/supabase/client';
-import { Document } from '@/types/supabaseTypes';
+
+const mockDocuments = [
+  {
+    id: 1,
+    name: "Предложение по проекту - Тех Решения",
+    type: "PDF",
+    size: "2.5 МБ",
+    lastModified: "2024-03-15",
+    content: "Это предложение по проекту для Тех Решения. Оно включает детали о масштабе проекта, сроках и бюджете.",
+  },
+  {
+    id: 2,
+    name: "Шаблон соглашения об услугах",
+    type: "DOCX",
+    size: "1.8 МБ",
+    lastModified: "2024-03-10",
+    content: "Это шаблон соглашения об услугах. Он включает условия предоставления услуг клиентам.",
+  },
+  {
+    id: 3,
+    name: "Отчет о маркетинговой кампании",
+    type: "PDF",
+    size: "3.2 МБ",
+    lastModified: "2024-03-05",
+    content: "Это отчет о маркетинговой кампании. Он включает детали о производительности кампании, бюджете и результатах.",
+  }
+];
+
+interface Document {
+  id: number;
+  name: string;
+  type: string;
+  size: string;
+  lastModified: string;
+  content: string;
+}
 
 const Documents = () => {
-  const { data: fetchedDocuments, isLoading, error, refetch } = useDocuments();
-  const [documents, setDocuments] = useState<any[]>([]);
+  const [documents, setDocuments] = useState<Document[]>(mockDocuments);
   const [showTemplateDialog, setShowTemplateDialog] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState<any | null>(null);
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [showDocumentForm, setShowDocumentForm] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [documentToDelete, setDocumentToDelete] = useState<string | null>(null);
+  const [documentToDelete, setDocumentToDelete] = useState<number | null>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (fetchedDocuments) {
-      setDocuments(fetchedDocuments);
-    }
-  }, [fetchedDocuments]);
-
-  const handleAddDocument = async (documentData: any) => {
-    try {
-      const { data: newDocument, error } = await supabase
-        .from('documents')
-        .insert([{
-          name: documentData.name,
-          type: documentData.type || 'other',
-          client_id: documentData.client_id || null,
-          project_id: documentData.project_id || null,
-          file_url: documentData.file_url || 'https://example.com/documents/new-document.pdf'
-        }])
-        .select();
-
-      if (error) throw error;
-
-      toast({
-        title: "Успешно",
-        description: "Документ создан",
-      });
-
-      refetch();
-    } catch (error: any) {
-      console.error('Error creating document:', error);
-      toast({
-        title: "Ошибка",
-        description: error.message || "Не удалось создать документ",
-        variant: "destructive"
-      });
-    }
+  const handleAddDocument = (documentData: any) => {
+    const newDocument = {
+      id: documents.length + 1,
+      ...documentData,
+      lastModified: new Date().toISOString().split('T')[0],
+      size: "1.0 МБ", // Default size
+    };
+    setDocuments([...documents, newDocument]);
   };
 
-  const handleDeleteDocument = async () => {
+  const handleDeleteDocument = () => {
     if (documentToDelete === null) return;
     
-    try {
-      const { error } = await supabase
-        .from('documents')
-        .delete()
-        .eq('id', documentToDelete);
-
-      if (error) throw error;
-      
-      setDocumentToDelete(null);
-      setDeleteDialogOpen(false);
-      
-      toast({
-        title: "Успешно",
-        description: "Документ удален",
-      });
-      
-      refetch();
-    } catch (error: any) {
-      console.error('Error deleting document:', error);
-      toast({
-        title: "Ошибка",
-        description: error.message || "Не удалось удалить документ",
-        variant: "destructive"
-      });
-    }
+    const updatedDocuments = documents.filter(doc => doc.id !== documentToDelete);
+    setDocuments(updatedDocuments);
+    setDocumentToDelete(null);
+    setDeleteDialogOpen(false);
+    
+    toast({
+      title: "Успешно",
+      description: "Документ удален",
+    });
   };
 
-  const openDeleteDialog = (docId: string, event: React.MouseEvent) => {
+  const openDeleteDialog = (docId: number, event: React.MouseEvent) => {
     event.stopPropagation();
     setDocumentToDelete(docId);
     setDeleteDialogOpen(true);
   };
-
-  if (isLoading) {
-    return <div className="flex justify-center p-12">Загрузка данных...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500 p-6">Ошибка загрузки данных: {(error as Error).message}</div>;
-  }
 
   return (
     <div className="space-y-6">
@@ -127,65 +108,50 @@ const Documents = () => {
       </div>
 
       <div className="grid gap-4">
-        {documents.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
-            Пока нет документов. Создайте свой первый документ.
-          </div>
-        ) : (
-          documents.map((doc) => (
-            <Card key={doc.id}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-medium">
-                  <div className="flex items-center">
-                    <FileText className="mr-2 h-4 w-4" />
-                    {doc.name}
-                  </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">
-                      Тип: {doc.type}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {doc.clientName && `Клиент: ${doc.clientName} • `}
-                      {doc.projectName && `Проект: ${doc.projectName}`}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Создан: {new Date(doc.created_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => setSelectedDocument({
-                        ...doc,
-                        content: "# " + doc.name + "\n\nЭтот документ связан с " + 
-                          (doc.projectName ? "проектом " + doc.projectName : "клиентом " + doc.clientName) +
-                          ".\n\n## Детали\n\nЗдесь размещается содержимое документа."
-                      })}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={(e) => openDeleteDialog(doc.id, e)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+        {documents.map((doc) => (
+          <Card key={doc.id}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-lg font-medium">
+                <div className="flex items-center">
+                  <FileText className="mr-2 h-4 w-4" />
+                  {doc.name}
                 </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">
+                    Тип: {doc.type} • Размер: {doc.size}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Изменен: {doc.lastModified}
+                  </p>
+                </div>
+                <div className="flex space-x-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setSelectedDocument(doc)}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={(e) => openDeleteDialog(doc.id, e)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Template Selection Dialog */}
