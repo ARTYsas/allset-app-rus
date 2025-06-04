@@ -28,17 +28,15 @@ export const useProjects = () => {
         .from('projects')
         .select(`
           *,
-          clients(id, name, company)
+          clients(name, company)
         `)
         .order('start_date', { ascending: false });
       
       if (error) throw error;
       return data.map(project => ({
         ...project,
-        client: project.clients ? {
-          name: project.clients.name,
-          company: project.clients.company
-        } : undefined
+        clientName: project.clients ? project.clients.name : '',
+        clientCompany: project.clients ? project.clients.company : ''
       }));
     }
   });
@@ -63,10 +61,8 @@ export const useProject = (id: string | undefined) => {
       if (error) throw error;
       return {
         ...data,
-        client: data.clients ? {
-          name: data.clients.name,
-          company: data.clients.company
-        } : undefined
+        clientName: data.clients ? data.clients.name : '',
+        clientCompany: data.clients ? data.clients.company : ''
       };
     },
     enabled: !!id
@@ -102,21 +98,16 @@ export const useDocuments = () => {
         .from('documents')
         .select(`
           *,
-          clients(id, name, company),
-          projects(id, name)
+          clients(name),
+          projects(name)
         `)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
       return data.map(doc => ({
         ...doc,
-        client: doc.clients ? {
-          name: doc.clients.name,
-          company: doc.clients.company
-        } : undefined,
-        project: doc.projects ? {
-          name: doc.projects.name
-        } : undefined
+        clientName: doc.clients ? doc.clients.name : '',
+        projectName: doc.projects ? doc.projects.name : ''
       }));
     }
   });
@@ -151,16 +142,14 @@ export const useFiles = () => {
         .from('files')
         .select(`
           *,
-          projects(id, name)
+          projects(name)
         `)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
       return data.map(file => ({
         ...file,
-        project: file.projects ? {
-          name: file.projects.name
-        } : undefined
+        projectName: file.projects ? file.projects.name : ''
       }));
     }
   });
@@ -195,9 +184,9 @@ export const useInvoices = () => {
         .from('invoices')
         .select(`
           *,
-          clients(id, name, company),
-          projects(id, name),
-          documents(id, name)
+          clients(name),
+          projects(name),
+          documents(name)
         `)
         .order('date', { ascending: false });
       
@@ -205,16 +194,9 @@ export const useInvoices = () => {
       
       return data.map(invoice => ({
         ...invoice,
-        client: invoice.clients ? {
-          name: invoice.clients.name,
-          company: invoice.clients.company
-        } : undefined,
-        project: invoice.projects ? {
-          name: invoice.projects.name
-        } : undefined,
-        document: invoice.documents ? {
-          name: invoice.documents.name
-        } : undefined
+        clientName: invoice.clients ? invoice.clients.name : '',
+        projectName: invoice.projects ? invoice.projects.name : '',
+        documentName: invoice.documents ? invoice.documents.name : '',
       }));
     }
   });
@@ -244,7 +226,7 @@ export const usePayments = () => {
           // Получаем информацию о клиенте
           const { data: clientData } = await supabase
             .from('clients')
-            .select('name, company')
+            .select('name')
             .eq('id', invoice.client_id)
             .single();
             
@@ -257,19 +239,17 @@ export const usePayments = () => {
           
           enhancedData.push({
             ...payment,
-            invoice: {
-              number: invoice.number
-            },
-            client: clientData ? {
-              name: clientData.name,
-              company: clientData.company
-            } : undefined,
-            project: projectData ? {
-              name: projectData.name
-            } : undefined
+            invoiceNumber: invoice.number,
+            clientName: clientData ? clientData.name : '',
+            projectName: projectData ? projectData.name : '',
           });
         } else {
-          enhancedData.push(payment);
+          enhancedData.push({
+            ...payment,
+            invoiceNumber: '',
+            clientName: '',
+            projectName: '',
+          });
         }
       }
       

@@ -1,79 +1,82 @@
 
-import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import {
-  Home,
+  BarChart,
   FileText,
-  Users,
-  Briefcase,
-  BarChart2,
+  FolderClosed,
+  Home,
+  LayoutDashboard,
   Settings,
-  FileIcon,
-  DollarSign,
-  LogOut
+  Users,
+  Wallet,
 } from "lucide-react";
 
-interface NavItem {
-  name: string;
-  path: string;
-  icon: React.ReactNode;
-}
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export default function Sidebar() {
-  const location = useLocation();
-  const { signOut } = useAuth();
-  
-  const navigation: NavItem[] = [
-    { name: "Дашборд", path: "/dashboard", icon: <Home className="h-5 w-5" /> },
-    { name: "Проекты", path: "/projects", icon: <Briefcase className="h-5 w-5" /> },
-    { name: "Клиенты", path: "/clients", icon: <Users className="h-5 w-5" /> },
-    { name: "Документы", path: "/documents", icon: <FileText className="h-5 w-5" /> },
-    { name: "Файлы", path: "/files", icon: <FileIcon className="h-5 w-5" /> },
-    { name: "Финансы", path: "/finances", icon: <DollarSign className="h-5 w-5" /> },
-    { name: "Аналитика", path: "/analytics", icon: <BarChart2 className="h-5 w-5" /> },
-    { name: "Настройки", path: "/settings", icon: <Settings className="h-5 w-5" /> }
-  ];
-
-  const isActive = (path: string) => location.pathname === path;
-  
-  const handleLogout = async () => {
-    await signOut();
-  };
-
+export function Sidebar({ className }: SidebarProps) {
   return (
-    <div className="flex flex-col h-full justify-between">
-      <div className="space-y-6 py-6">
-        <div className="px-6">
-          <h2 className="text-xl font-bold">IT Workbench</h2>
-          <p className="text-sm text-muted-foreground">Управление проектами</p>
+    <div className={cn("pb-12", className)}>
+      <div className="space-y-4 py-4">
+        <div className="px-4 py-2">
+          
+          <span className="text-3xl font-bold text-blue-600 tracking-widest">
+            ALLSET
+          </span>
+
+          <div className="space-y-1">
+            <SidebarItem Icon={LayoutDashboard} to="/">
+              Главная
+            </SidebarItem>
+            <SidebarItem Icon={Users} to="/clients">
+              Клиенты
+            </SidebarItem>
+            <SidebarItem Icon={FolderClosed} to="/projects">
+              Проекты
+            </SidebarItem>
+            <SidebarItem Icon={FileText} to="/documents">
+              Документы
+            </SidebarItem>
+            <SidebarItem Icon={Wallet} to="/finances">
+              Финансы
+            </SidebarItem>
+            <SidebarItem Icon={Home} to="/files">
+              Файлы
+            </SidebarItem>
+            <SidebarItem Icon={BarChart} to="/analytics">
+              Аналитика
+            </SidebarItem>
+            <SidebarItem Icon={Settings} to="/settings">
+              Настройки
+            </SidebarItem>
+          </div>
         </div>
-        <nav className="space-y-1 px-3">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              to={item.path}
-              className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-                isActive(item.path)
-                  ? "bg-secondary text-secondary-foreground"
-                  : "text-muted-foreground hover:bg-secondary/80 hover:text-secondary-foreground"
-              }`}
-            >
-              <span className="mr-3">{item.icon}</span>
-              {item.name}
-            </Link>
-          ))}
-        </nav>
-      </div>
-      
-      <div className="px-3 pb-6">
-        <button
-          onClick={handleLogout}
-          className="flex w-full items-center px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-destructive/90 hover:text-destructive-foreground"
-        >
-          <LogOut className="h-5 w-5 mr-3" />
-          Выйти
-        </button>
       </div>
     </div>
+  );
+}
+
+interface SidebarItemProps {
+  Icon: LucideIcon;
+  children: React.ReactNode;
+  to: string;
+}
+
+function SidebarItem({ Icon, children, to }: SidebarItemProps) {
+  return (
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        cn(
+          "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+          isActive ? "bg-accent text-accent-foreground" : "transparent"
+        )
+      }
+    >
+      <Icon className="mr-2 h-4 w-4" />
+      <span>{children}</span>
+    </NavLink>
   );
 }
