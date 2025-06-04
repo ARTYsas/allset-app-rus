@@ -1,16 +1,14 @@
-
-import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from '@/components/ui/use-toast';
 
-interface IncomeData {
-  month: string;
-  revenue: number;
-  projects: number;
-  year: number;
-}
+const mockData = [
+  { month: 'Янв', revenue: 72000, projects: 3 },
+  { month: 'Фев', revenue: 95000, projects: 4 },
+  { month: 'Мар', revenue: 84000, projects: 5 },
+  { month: 'Апр', revenue: 110000, projects: 6 },
+  { month: 'Май', revenue: 123000, projects: 7 },
+  { month: 'Июн', revenue: 136000, projects: 6 },
+];
 
 const customTooltipStyle = {
   backgroundColor: '#fff',
@@ -35,67 +33,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 const Analytics = () => {
-  const [incomeData, setIncomeData] = useState<IncomeData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [stats, setStats] = useState({
-    totalIncome: 0,
-    totalProjects: 0,
-    growthPercent: 0,
-    projectGrowth: 0,
-    satisfaction: 100
-  });
-  const { toast } = useToast();
-
-  useEffect(() => {
-    const fetchIncomeData = async () => {
-      try {
-        setIsLoading(true);
-        
-        // Получаем данные о доходах из Supabase
-        const { data: monthlyData, error: monthlyError } = await supabase
-          .from('monthly_income')
-          .select('*')
-          .order('year', { ascending: true })
-          .order('month', { ascending: true });
-
-        if (monthlyError) {
-          throw monthlyError;
-        }
-
-        if (monthlyData) {
-          setIncomeData(monthlyData);
-          
-          // Расчет общей суммы дохода и роста
-          const totalIncome = monthlyData.reduce((sum, item) => sum + item.revenue, 0);
-          const totalProjects = monthlyData.reduce((sum, item) => sum + item.projects, 0);
-          
-          // Рассчитываем рост по сравнению с предыдущим полугодием (просто для примера)
-          const growthPercent = 11;
-          const projectGrowth = 5;
-          
-          setStats({
-            totalIncome,
-            totalProjects,
-            growthPercent,
-            projectGrowth,
-            satisfaction: 100
-          });
-        }
-      } catch (error) {
-        console.error("Ошибка при загрузке данных:", error);
-        toast({
-          title: "Ошибка загрузки данных",
-          description: "Не удалось загрузить данные аналитики. Пожалуйста, попробуйте позже.",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchIncomeData();
-  }, [toast]);
-
   return (
     <div className="space-y-6">
       <div>
@@ -103,105 +40,97 @@ const Analytics = () => {
         <p className="text-muted-foreground">Доход и активность как самозанятого специалиста</p>
       </div>
 
-      {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <p>Загрузка данных...</p>
-        </div>
-      ) : (
-        <>
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Доход по месяцам</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={incomeData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="month" />
-                      <YAxis />
-                      <Tooltip content={<CustomTooltip />} />
-                      <Line 
-                        type="monotone" 
-                        name="revenue"
-                        dataKey="revenue" 
-                        stroke="#4f46e5" 
-                        strokeWidth={2}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Доход по месяцам</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={mockData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line 
+                    type="monotone" 
+                    name="revenue"
+                    dataKey="revenue" 
+                    stroke="#4f46e5" 
+                    strokeWidth={2}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Проекты по месяцам</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={incomeData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="month" />
-                      <YAxis />
-                      <Tooltip content={<CustomTooltip />} />
-                      <Bar 
-                        name="projects"
-                        dataKey="projects" 
-                        fill="#34d399"
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Проекты по месяцам</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={mockData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Bar 
+                    name="projects"
+                    dataKey="projects" 
+                    fill="#34d399"
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm font-medium">
-                  Общий доход (6 мес)
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">₽{stats.totalIncome.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">
-                  +{stats.growthPercent}% к предыдущему полугодию
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm font-medium">
-                  Завершено проектов
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.totalProjects}</div>
-                <p className="text-xs text-muted-foreground">
-                  +{stats.projectGrowth} к прошлому периоду
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm font-medium">
-                  Удовлетворенность клиентов
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">{stats.satisfaction}%</div>
-                <p className="text-xs text-muted-foreground">
-                  Все клиенты оставили положительные отзывы
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </>
-      )}
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium">
+              Общий доход (6 мес)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">₽620 000</div>
+            <p className="text-xs text-muted-foreground">
+              +11% к предыдущему полугодию
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium">
+              Завершено проектов
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">31</div>
+            <p className="text-xs text-muted-foreground">
+              +5 к прошлому периоду
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium">
+              Удовлетворенность клиентов
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">100%</div>
+            <p className="text-xs text-muted-foreground">
+              Все клиенты оставили положительные отзывы
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
